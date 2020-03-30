@@ -50,8 +50,8 @@ router.put('/add', async (req, res) => {
 // DELETE /lists/:id
 
 router.delete('/:id', async (req, res) => {
-  await List.updateOne({ user }, { $pull: { games: { id: req.params.id } }});
-  res.status(200).json({});
+  const updatedList = await List.updateOne({ user }, { $pull: { games: { id: req.params.id } }});
+  res.status(200).json(updatedList);
 });
 
 module.exports = router;
