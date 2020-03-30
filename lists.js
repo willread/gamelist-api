@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose').set('debug', true);
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
 
 const ListSchema = mongoose.Schema({
   user: String,
