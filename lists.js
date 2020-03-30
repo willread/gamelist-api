@@ -37,11 +37,7 @@ router.get('/', async (req, res) => {
     }
   );
 
-  if (doc.ok) {
-    res.status(200).json(doc.value);
-  } else {
-    res.status(500).json({error: ''});
-  }
+  res.status(200).json(doc);
 });
 
 module.exports = router;
