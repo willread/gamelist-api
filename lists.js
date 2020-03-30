@@ -67,4 +67,10 @@ router.delete('/:id', checkJwt, async (req, res) => {
   res.status(200).json(updatedList);
 });
 
+app.use((err, req, res) => {
+	if (err.name === 'UnauthorizedError') {
+		res.status(401).json({ message: 'Unauthorized. Invalid token!' });
+	}
+});
+
 module.exports = router;
