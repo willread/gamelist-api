@@ -40,16 +40,16 @@ router.get('/', async (req, res) => {
   res.status(200).json(doc);
 });
 
-// PUT /list
+// POST /list/add
 
-router.put('/', async (req, res) => {
+router.put('/add', async (req, res) => {
   List.updateOne({ user }, { $push: { games: req.body.game }});
   res.status(200).json({});
 });
 
-// DELETE /list
+// DELETE /lists/delete
 
-router.delete('/', async (req, res) => {
+router.delete('/delete', async (req, res) => {
   await List.updateOne({ user }, { $pull: { games: { id: req.query.id } }});
   res.status(200).json({});
 });
