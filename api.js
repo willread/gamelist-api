@@ -50,6 +50,11 @@ app.get('/', (req, res) => {
   res.end('');
 });
 
+// Import modules
+
+app.use('/games', require('./games'));
+app.use('/lists', require('./lists'));
+
 // Handle authentication errors
 
 app.use((err, req, res, next) => {
@@ -59,8 +64,3 @@ app.use((err, req, res, next) => {
     next();
   }
 });
-
-// Import modules
-
-app.use('/games', require('./games'));
-app.use('/lists', require('./lists'));
