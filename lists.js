@@ -43,7 +43,7 @@ router.get('/', async (req, res) => {
 // POST /list/add
 
 router.put('/add', async (req, res) => {
-  List.updateOne({ user }, { $push: { games: req.body.game }});
+  await List.updateOne({ user }, { $push: { games: req.body.game }});
   res.status(200).json({});
 });
 
