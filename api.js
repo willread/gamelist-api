@@ -52,3 +52,4 @@ app.get('/', (req, res) => {
 // Import modules
 
 app.use('/games', require('./games'));
+app.use('/lists', require('./lists'));
