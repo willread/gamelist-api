@@ -38,7 +38,7 @@ router.get('/', checkJwt, async (req, res) => {
     { user: req.user.sub },
     {
       $setOnInsert: {
-        user: user.sub,
+        user: req.user.sub,
         games: []
       }
     },
