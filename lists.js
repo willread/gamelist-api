@@ -36,21 +36,7 @@ const checkJwt = jwt({
 const user = 'google-oauth2|101459134272835055552'; // FIXME
 
 router.get('/', checkJwt, async (req, res) => {
-  const doc = await List.findOneAndUpdate(
-    { user },
-    {
-      $setOnInsert: {
-        user: user.sub,
-        games: []
-      }
-    },
-    {
-      new: true,
-      upsert: true
-    }
-  );
-
-  res.status(200).json(doc);
+  res.status(200).json(req.user);
 });
 
 // POST /list/add
@@ -65,12 +51,6 @@ router.post('/add', checkJwt, async (req, res) => {
 router.delete('/:id', checkJwt, async (req, res) => {
   const updatedList = await List.updateOne({ user }, { $pull: { games: { id: parseInt(req.params.id) } }});
   res.status(200).json(updatedList);
-});
-
-// GET /lists/user
-
-router.get('/user', checkJwt, async (req, res) => {
-  res.status(200).json(req.user);
 });
 
 module.exports = router;
