@@ -52,3 +52,5 @@ app.get('/', function(req, res) {
 });
 
 // Import modules
+
+app.use('/games', require('./games'));
