@@ -47,10 +47,10 @@ router.put('/add', async (req, res) => {
   res.status(200).json({});
 });
 
-// DELETE /lists/delete
+// DELETE /lists/:id
 
-router.delete('/delete', async (req, res) => {
-  await List.updateOne({ user }, { $pull: { games: { id: req.query.id } }});
+router.delete('/:id', async (req, res) => {
+  await List.updateOne({ user }, { $pull: { games: { id: req.params.id } }});
   res.status(200).json({});
 });
 
