@@ -50,7 +50,7 @@ router.put('/add', async (req, res) => {
 // DELETE /lists/:id
 
 router.delete('/:id', async (req, res) => {
-  const updatedList = await List.updateOne({ user }, { $pull: { games: { id: req.params.id } }});
+  const updatedList = await List.updateOne({ user }, { $pull: { games: { id: parseInt(req.params.id) } }});
   res.status(200).json(updatedList);
 });
 
