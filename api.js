@@ -50,6 +50,14 @@ app.get('/', (req, res) => {
   res.end('');
 });
 
+// Handle authentication errors
+
+app.use((err, req, res) => {
+	if (err.name === 'UnauthorizedError') {
+		res.status(401).json({ message: 'Unauthorized. Invalid token!' });
+	}
+});
+
 // Import modules
 
 app.use('/games', require('./games'));
