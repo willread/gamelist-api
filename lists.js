@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
       }
     },
     {
-      returnNewDocument: true,
+      new: true,
       upsert: true
     }
   );
