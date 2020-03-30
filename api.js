@@ -52,10 +52,12 @@ app.get('/', (req, res) => {
 
 // Handle authentication errors
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
 	if (err.name === 'UnauthorizedError') {
 		res.status(401).json({ message: 'Unauthorized. Invalid token!' });
-	}
+	} else {
+    next();
+  }
 });
 
 // Import modules
