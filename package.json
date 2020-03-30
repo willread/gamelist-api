@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "express-sanitizer": "^1.0.5",
     "express-validator": "^6.4.0",
+    "isomorphic-unfetch": "^3.0.0",
     "mongo": "^0.1.0",
     "mongo-sanitize": "^1.1.0",
     "mongodb": "^3.5.5",
