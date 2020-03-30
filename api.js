@@ -3,7 +3,10 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoSanitize = require('mongo-sanitize');
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
 
 const app = express();
 
