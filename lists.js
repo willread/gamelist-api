@@ -33,23 +33,35 @@ const checkJwt = jwt({
 
 // GET /list
 
-const user = 'google-oauth2|101459134272835055552'; // FIXME
-
 router.get('/', checkJwt, async (req, res) => {
-  res.status(200).json(req.user);
+  const doc = await List.findOneAndUpdate(
+    { user: req.user.sub },
+    {
+      $setOnInsert: {
+        user: user.sub,
+        games: []
+      }
+    },
+    {
+      new: true,
+      upsert: true
+    }
+  );
+
+  res.status(200).json(doc);
 });
 
 // POST /list/add
 
 router.post('/add', checkJwt, async (req, res) => {
-  await List.updateOne({ user }, { $push: { games: req.body.game }});
+  await List.updateOne({ user: req.user.sub }, { $push: { games: req.body.game }});
   res.status(200).json({});
 });
 
 // DELETE /lists/:id
 
 router.delete('/:id', checkJwt, async (req, res) => {
-  const updatedList = await List.updateOne({ user }, { $pull: { games: { id: parseInt(req.params.id) } }});
+  const updatedList = await List.updateOne({ user: req.user.sub }, { $pull: { games: { id: parseInt(req.params.id) } }});
   res.status(200).json(updatedList);
 });
 
