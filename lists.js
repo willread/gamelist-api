@@ -40,4 +40,18 @@ router.get('/', async (req, res) => {
   res.status(200).json(doc);
 });
 
+// PUT /list
+
+router.put('/', async (req, res) => {
+  List.updateOne({ user }, { $push: { games: req.body.game }});
+  res.status(200).json({});
+});
+
+// DELETE /list
+
+router.delete('/', async (req, res) => {
+  await List.updateOne({ user }, { $pull: { games: { id: req.query.id } }});
+  res.status(200).json({});
+});
+
 module.exports = router;
