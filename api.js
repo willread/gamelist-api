@@ -61,7 +61,6 @@ app.use((err, req, res, next) => {
 	if (err.name === 'UnauthorizedError') {
 		res.status(401).json({ message: 'Unauthorized. Invalid token!' });
 	} else {
-    console.log('req', req);
     next();
   }
 });

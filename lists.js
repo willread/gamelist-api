@@ -67,4 +67,10 @@ router.delete('/:id', checkJwt, async (req, res) => {
   res.status(200).json(updatedList);
 });
 
+// GET /lists/user
+
+router.get('/user', checkJwt, async (req, res) => {
+  res.status(200).json(req.user);
+});
+
 module.exports = router;
