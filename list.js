@@ -42,7 +42,7 @@ const checkJwt = jwt({
   issuer: `https://${process.env.AUTH0_DOMAIN}/`
 });
 
-const getList = async () => {
+const getList = async req => {
   return await List.findOneAndUpdate(
     { user: req.user.sub },
     {
@@ -60,7 +60,7 @@ const getList = async () => {
 // GET /list
 
 router.get('/', checkJwt, async (req, res) => {
-  const list = await getList();
+  const list = await getList(req);
   const games = await Game.find(
     { list: list._id }
   );
@@ -76,7 +76,7 @@ router.post('/game/:id', checkJwt, async (req, res) => {
   const giantbombGame = await giantbomb.query(`game/${req.params.id}`);
 
   if (giantbombGame) {
-    const list = await getList();
+    const list = await getList(req);
     const game = new Game({
       name: game.name,
       platform: req.body.platform,
