@@ -14,7 +14,14 @@ router.get('/', async (req, res) => {
         query,
         limit: 5,
         field_list: 'id,name,image,platforms'
-    });
+    })
+        .map(game => ({
+            name: game.name,
+            images: {
+                icon: game.image.icon_url
+            },
+            platforms: game.platforms.map(platform => platform.abbreviation)
+        }));
     res.status(200).json(results);
 });
 
