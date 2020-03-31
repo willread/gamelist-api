@@ -6,7 +6,7 @@ const jwksRsa = require('jwks-rsa');
 const giantbomb = require('./giantbomb');
 
 const GameSchema = mongoose.Schema({
-  list: mongoose.Schema.types.ObjectID,
+  list: mongoose.Schema.Types.ObjectId,
   name: String,
   images: Object, // FIXME,
   platform: {
