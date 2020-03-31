@@ -12,7 +12,11 @@ const GameSchema = mongoose.Schema({
   platform: {
     type: String,
     enum: giantbomb.platforms
-  }
+  },
+  timeLog: Array,
+  finished: Boolean,
+  dateFinished: Date,
+  pricePaid: Number
 });
 
 const Game = mongoose.model('Game', GameSchema);
@@ -57,6 +61,7 @@ const getList = async req => {
   );
 };
 
+// Get your list
 // GET /list
 
 router.get('/', checkJwt, async (req, res) => {
@@ -70,6 +75,7 @@ router.get('/', checkJwt, async (req, res) => {
   });
 });
 
+// Add a game to your list
 // POST /list/games/:id
 
 router.post('/games/:id', checkJwt, async (req, res) => {
@@ -94,6 +100,7 @@ router.post('/games/:id', checkJwt, async (req, res) => {
   }
 });
 
+// Delete a game from your list
 // DELETE /list/games/:id
 
 router.delete('/games/:id', checkJwt, async (req, res) => {

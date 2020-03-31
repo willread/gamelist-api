@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
             images: {
                 icon: game.image.icon_url
             },
-            platforms: game.platforms.map(platform => platform.abbreviation)
+            platforms: game.platforms ? game.platforms.map(platform => platform.abbreviation) : []
         }));
     res.status(200).json(results);
 });
