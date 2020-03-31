@@ -12,6 +12,4 @@ const query = async (path, customParams = {}) => {
     return results.results;
 };
 
-module.exports = {
-    query
-};
+module.exports = { query };
