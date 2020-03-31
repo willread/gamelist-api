@@ -70,9 +70,9 @@ router.get('/', checkJwt, async (req, res) => {
   res.status(200).json(list);
 });
 
-// POST /list/add/:id
+// POST /list/games/:id
 
-router.post('/game/:id', checkJwt, async (req, res) => {
+router.post('/games/:id', checkJwt, async (req, res) => {
   const giantbombGame = await giantbomb.query(`game/${req.params.id}`);
 
   if (giantbombGame) {
