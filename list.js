@@ -60,17 +60,14 @@ const getList = async req => {
 // GET /list
 
 router.get('/', checkJwt, async (req, res) => {
-  const list = await getList(req);
+  let list = await getList(req);
   const games = await Game.find(
     { list: new mongoose.Types.ObjectId(list._id) }
   );
 
   list.games = games;
 
-  res.status(200).json({
-    list,
-    games
-  });
+  res.status(200).json(list);
 });
 
 // POST /list/games/:id
