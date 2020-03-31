@@ -9,12 +9,12 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     const query = req.query.query; // TODO: Sanitize query
-    const results = await giantbomb.query('search', {
+    const results = (await giantbomb.query('search', {
         resources: 'game',
         query,
         limit: 5,
         field_list: 'id,name,image,platforms'
-    })
+    }))
         .map(game => ({
             name: game.name,
             images: {
