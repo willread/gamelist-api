@@ -5,7 +5,8 @@ const query = async (path, customParams = {}) => {
         api_key: process.env.GIANTBOMB_API_KEY,
         format: 'json'
     }, customParams);
-    const url = `https://www.giantbomb.com/api/${path}?${params.join('&')}`;
+    const queryString = Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
+    const url = `https://www.giantbomb.com/api/${path}?${queryString}`;
     const results = await (await fetch(url)).json();
 
     return results.results;
