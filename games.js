@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
         query,
         limit: 5,
         field_list: 'id,name,image,platforms'
-    }))
+    })).results;
     const games = [];
 
     results.forEach(result => {
