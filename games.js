@@ -14,17 +14,17 @@ router.get('/', async (req, res) => {
         query,
         limit: 5,
         field_list: 'id,name,image,platforms'
-    })).results;
+    }));
     const games = [];
 
     results.forEach(result => {
-        if (results.platforms) {
-            results.platforms.forEach(platform => {
+        if (result.platforms) {
+            result.platforms.forEach(platform => {
                 games.push({
-                    id: game.id,
-                    name: game.name,
+                    id: result.id,
+                    name: result.name,
                     images: {
-                        icon: game.image.icon_url
+                        icon: result.image.icon_url
                     },
                     platform
                 });
