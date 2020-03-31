@@ -97,8 +97,13 @@ router.post('/games/:id', checkJwt, async (req, res) => {
 // DELETE /list/games/:id
 
 router.delete('/games/:id', checkJwt, async (req, res) => {
-  const updatedList = await List.updateOne({ user: req.user.sub }, { $pull: { games: { id: parseInt(req.params.id) } }});
-  res.status(200).json(updatedList);
+  const list = await getList(req);
+
+  Game.deleteOne({
+    list: new mongoose.Types.ObjectId(list._id),
+    _id: new mongoose.Types.ObjectId(req.params.id)
+  })
+  res.status(200).json({});
 });
 
 module.exports = router;
