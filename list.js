@@ -66,9 +66,11 @@ router.get('/', checkJwt, async (req, res) => {
   );
 
   list.games = games;
-  list.foo = 'bar';
 
-  res.status(200).json(list);
+  res.status(200).json({
+    list,
+    games
+  });
 });
 
 // POST /list/games/:id
