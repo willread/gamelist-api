@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
         resources: 'game',
         query,
         limit: 5,
-        field_list: 'id, name, image, platforms'
+        field_list: 'id,name,image,platforms'
     });
     res.status(200).json(results);
 });
