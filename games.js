@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
                     images: {
                         icon: result.image.icon_url
                     },
-                    platform
+                    platform: platform.abbreviation
                 });
             });
         }
