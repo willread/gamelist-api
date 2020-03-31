@@ -15,15 +15,24 @@ router.get('/', async (req, res) => {
         limit: 5,
         field_list: 'id,name,image,platforms'
     }))
-        .map(game => ({
-            id: game.id,
-            name: game.name,
-            images: {
-                icon: game.image.icon_url
-            },
-            platforms: game.platforms ? game.platforms.map(platform => platform.abbreviation) : []
-        }));
-    res.status(200).json(results);
+    const games = [];
+
+    results.forEach(result => {
+        if (results.platforms) {
+            results.platforms.forEach(platform => {
+                games.push({
+                    id: game.id,
+                    name: game.name,
+                    images: {
+                        icon: game.image.icon_url
+                    },
+                    platform
+                });
+            });
+        }
+    });
+
+    res.status(200).json(games);
 });
 
 module.exports = router;
