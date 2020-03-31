@@ -78,13 +78,15 @@ router.post('/games/:id', checkJwt, async (req, res) => {
   if (giantbombGame) {
     const list = await getList(req);
     const game = new Game({
-      name: game.name,
+      name: giantbombGame.name,
       platform: req.body.platform,
       images: {
-        icon: game.image.icon_url
+        icon: giantbombGame.image.icon_url
       },
       list: list._id
     });
+
+    await game.save();
 
     res.status(200).json({});
   } else {
