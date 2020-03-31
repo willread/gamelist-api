@@ -5,12 +5,21 @@ const jwksRsa = require('jwks-rsa');
 
 const giantbomb = require('./giantbomb');
 
-const ListSchema = mongoose.Schema({
-  user: String,
-  // user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-  games: Array
+const GameSchema = mongoose.Schema({
+  list: mongoose.Schema.types.ObjectID,
+  name: String,
+  images: Object, // FIXME,
+  platform: {
+    type: String,
+    enum: giantbomb.platforms
+  }
 });
-// ListSchema.index({name: '', description: ''})
+
+const Game = mongoose.model('Game', GameSchema);
+
+const ListSchema = mongoose.Schema({
+  user: String
+});
 
 const List = mongoose.model('List', ListSchema);
 
@@ -33,15 +42,12 @@ const checkJwt = jwt({
   issuer: `https://${process.env.AUTH0_DOMAIN}/`
 });
 
-// GET /list
-
-router.get('/', checkJwt, async (req, res) => {
-  const doc = await List.findOneAndUpdate(
+const getList = async () => {
+  return await List.findOneAndUpdate(
     { user: req.user.sub },
     {
       $setOnInsert: {
-        user: req.user.sub,
-        games: []
+        user: req.user.sub
       }
     },
     {
@@ -49,24 +55,44 @@ router.get('/', checkJwt, async (req, res) => {
       upsert: true
     }
   );
+};
 
-  res.status(200).json(doc);
+// GET /list
+
+router.get('/', checkJwt, async (req, res) => {
+  const list = await getList();
+  const games = await Game.find(
+    { list: list._id }
+  );
+
+  list.games = games;
+
+  res.status(200).json(list);
 });
 
 // POST /list/add/:id
 
-router.post('/games/:id', checkJwt, async (req, res) => {
-  const game = await giantbomb.query(`game/${req.params.id}`);
+router.post('/game/:id', checkJwt, async (req, res) => {
+  const giantbombGame = await giantbomb.query(`game/${req.params.id}`);
 
-  if (game) {
-    await List.updateOne({ user: req.user.sub }, { $push: { games: game }});
+  if (giantbombGame) {
+    const list = await getList();
+    const game = new Game({
+      name: game.name,
+      platform: req.body.platform,
+      images: {
+        icon: game.image.icon_url
+      },
+      list: list._id
+    });
+
     res.status(200).json({});
   } else {
     res.status(500).json({}); // TODO
   }
 });
 
-// DELETE /lists/:id
+// DELETE /list/games/:id
 
 router.delete('/games/:id', checkJwt, async (req, res) => {
   const updatedList = await List.updateOne({ user: req.user.sub }, { $pull: { games: { id: parseInt(req.params.id) } }});
