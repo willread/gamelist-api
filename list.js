@@ -62,7 +62,7 @@ const getList = async req => {
 router.get('/', checkJwt, async (req, res) => {
   const list = await getList(req);
   const games = await Game.find(
-    { list: list._id }
+    { list: new mongoose.Types.ObjectId(list._id) }
   );
 
   list.games = games;
