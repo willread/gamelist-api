@@ -88,7 +88,7 @@ router.post('/games/:id', checkJwt, async (req, res) => {
 
     await game.save();
 
-    res.status(200).json({ game });
+    res.status(200).json(game);
   } else {
     res.status(500).json({}); // TODO
   }
