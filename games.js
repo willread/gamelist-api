@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
         field_list: 'id,name,image,platforms'
     }))
         .map(game => ({
+            id: game.id,
             name: game.name,
             images: {
                 icon: game.image.icon_url
