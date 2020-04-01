@@ -13,6 +13,7 @@ const GameSchema = mongoose.Schema({
     type: String,
     enum: giantbomb.platforms
   },
+  genres: Array,
   timeLog: Array,
   playing: Boolean,
   finished: Boolean,
@@ -92,6 +93,7 @@ router.post('/games/:id', checkJwt, async (req, res) => {
         original: giantbombGame.image.original_url,
         thumbnaim: giantbombGame.image.thumb_url
       },
+      genres: giantbombGame.genres.map(genre => genre.name),
       list: list._id
     });
 
