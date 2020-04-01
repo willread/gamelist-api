@@ -14,7 +14,7 @@ const GameSchema = mongoose.Schema({
     enum: giantbomb.platforms
   },
   genres: Array,
-  timeLog: Array,
+  secondsPlayed: Number,
   status: {
     type: String,
     enum: ['playing', 'finished', 'stopped', 'unplayed']
@@ -97,7 +97,8 @@ router.post('/games/:id', checkJwt, async (req, res) => {
       },
       genres: giantbombGame.genres.map(genre => genre.name),
       list: list._id,
-      status: 'unplayed'
+      status: 'unplayed',
+      secondsPlayed: 0
     });
 
     await game.save();
@@ -122,6 +123,7 @@ router.delete('/games/:id', checkJwt, async (req, res) => {
 });
 
 // Update a game
+// PATCH /list/games/:id
 
 router.patch('/games/:id/', checkJwt, async (req, res) => {
   const list = await getList(req);
@@ -130,6 +132,25 @@ router.patch('/games/:id/', checkJwt, async (req, res) => {
     list: new mongoose.Types.ObjectId(list._id),
     _id: new mongoose.Types.ObjectId(req.params.id)
   }, req.body);
+});
+
+// Log time
+// PUT /list/games/:id/time
+
+router.put('/games/:id/time', checkJwt, async (req, res) => {
+  const list = await getList(req);
+  const seconds = parseInt(req.body.seconds || 0);
+
+  if (seconds > 0) {
+    await Game.findOneAndUpdate({
+      list: new mongoose.Types.ObjectId(list._id),
+      _id: new mongoose.Types.ObjectId(req.params.id)
+    }, {
+      $inc: {
+        secondsPlayed: seconds
+      }
+    });
+  }
 });
 
 module.exports = router;
