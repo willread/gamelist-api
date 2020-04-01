@@ -96,7 +96,8 @@ router.post('/games/:id', checkJwt, async (req, res) => {
         thumbnaim: giantbombGame.image.thumb_url
       },
       genres: giantbombGame.genres.map(genre => genre.name),
-      list: list._id
+      list: list._id,
+      status: 'unplayed'
     });
 
     await game.save();
