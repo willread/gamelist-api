@@ -15,8 +15,10 @@ const GameSchema = mongoose.Schema({
   },
   genres: Array,
   timeLog: Array,
-  playing: Boolean,
-  finished: Boolean,
+  status: {
+    type: String,
+    enum: ['playing', 'finished', 'stopped', 'unplayed']
+  },
   dateFinished: Date,
   pricePaid: Number
 });
@@ -116,6 +118,17 @@ router.delete('/games/:id', checkJwt, async (req, res) => {
     _id: new mongoose.Types.ObjectId(req.params.id)
   })
   res.status(200).json({});
+});
+
+// Update a game
+
+router.patch('/games/:id/', checkJwt, async (req, res) => {
+  const list = await getList(req);
+
+  await Game.findOneAndUpdate({
+    list: new mongoose.Types.ObjectId(list._id),
+    _id: new mongoose.Types.ObjectId(req.params.id)
+  }, req.body);
 });
 
 module.exports = router;
