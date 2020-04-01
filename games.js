@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
         resources: 'game',
         query,
         limit: 5,
-        field_list: 'id,name,image,platforms,genres'
+        field_list: 'id,name,image,platforms'
     }));
     const games = [];
 
@@ -28,7 +28,6 @@ router.get('/', async (req, res) => {
                         original: result.image.original_url,
                         thumbnaim: result.image.thumb_url
                     },
-                    genres: result.genres.map(genre => genre.name),
                     platform: platform.abbreviation
                 });
             });
