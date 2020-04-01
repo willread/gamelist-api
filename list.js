@@ -93,7 +93,7 @@ router.post('/games/:id', checkJwt, async (req, res) => {
       images: {
         icon: giantbombGame.image.icon_url,
         original: giantbombGame.image.original_url,
-        thumbnaim: giantbombGame.image.thumb_url
+        thumbnail: giantbombGame.image.thumb_url
       },
       genres: giantbombGame.genres.map(genre => genre.name),
       list: list._id,
