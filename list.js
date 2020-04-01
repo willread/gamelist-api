@@ -14,6 +14,7 @@ const GameSchema = mongoose.Schema({
     enum: giantbomb.platforms
   },
   timeLog: Array,
+  playing: Boolean,
   finished: Boolean,
   dateFinished: Date,
   pricePaid: Number
@@ -87,7 +88,9 @@ router.post('/games/:id', checkJwt, async (req, res) => {
       name: giantbombGame.name,
       platform: req.body.platform,
       images: {
-        icon: giantbombGame.image.icon_url
+        icon: giantbombGame.image.icon_url,
+        original: giantbombGame.image.original_url,
+        thumbnaim: giantbombGame.image.thumb_url
       },
       list: list._id
     });

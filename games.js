@@ -25,6 +25,8 @@ router.get('/', async (req, res) => {
                     name: result.name,
                     images: {
                         icon: result.image.icon_url
+                        original: result.image.original_url,
+                        thumbnaim: result.image.thumb_url
                     },
                     platform: platform.abbreviation
                 });
