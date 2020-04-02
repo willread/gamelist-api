@@ -132,6 +132,8 @@ router.patch('/games/:id/', checkJwt, async (req, res) => {
     list: new mongoose.Types.ObjectId(list._id),
     _id: new mongoose.Types.ObjectId(req.params.id)
   }, req.body);
+
+  res.status(200).json({});
 });
 
 // Log time
@@ -151,6 +153,8 @@ router.put('/games/:id/time', checkJwt, async (req, res) => {
       }
     });
   }
+
+  res.status(200).json({});
 });
 
 module.exports = router;
