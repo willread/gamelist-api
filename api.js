@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const bodyParser = require('body-parser');
 const mongoSanitize = require('mongo-sanitize');
 const mongoose = require('mongoose');
@@ -54,6 +53,7 @@ app.get('/', (req, res) => {
 
 app.use('/games', require('./games'));
 app.use('/list', require('./list'));
+app.use('/profile', require('./profile'));
 
 // Handle authentication errors
 

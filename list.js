@@ -1,9 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose').set('debug', true);
-const jwt = require('express-jwt');
-const jwksRsa = require('jwks-rsa');
 
 const giantbomb = require('./giantbomb');
+const auth = require('./auth');
 
 const GameSchema = mongoose.Schema({
   list: mongoose.Schema.Types.ObjectId,
@@ -35,21 +34,6 @@ const List = mongoose.model('List', ListSchema);
 
 var router = express.Router();
 
-// Define middleware that validates incoming bearer tokens
-// using JWKS from YOUR_DOMAIN
-
-const checkJwt = jwt({
-  secret: jwksRsa.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
-  }),
-
-  audience: process.env.AUTH0_API_IDENTIFIER,
-  issuer: `https://${process.env.AUTH0_DOMAIN}/`
-});
-
 const getUserList = async req => {
   return await List.findOneAndUpdate(
     { user: req.user.sub },
@@ -68,7 +52,7 @@ const getUserList = async req => {
 // Get your list
 // GET /list
 
-router.get('/', checkJwt, async (req, res) => {
+router.get('/', auth.checkJwt, async (req, res) => {
   const list = await getUserList(req);
   const games = await Game.find(
     { list: new mongoose.Types.ObjectId(list._id) }
@@ -80,10 +64,10 @@ router.get('/', checkJwt, async (req, res) => {
 });
 
 // Get a list
-// GET /list/:id
+// GET /list/:username
 
 router.get('/', async (req, res) => {
-  const list = await List.findOne({ _id: req.params.id });
+  const list = await List.findOne({ _id: req.params.username });
   const games = await Game.find(
     { list: new mongoose.Types.ObjectId(list._id) }
   );
@@ -96,7 +80,7 @@ router.get('/', async (req, res) => {
 // Add a game to your list
 // POST /list/games/:id
 
-router.post('/games/:id', checkJwt, async (req, res) => {
+router.post('/games/:id', auth.checkJwt, async (req, res) => {
   const giantbombGame = await giantbomb.query(`game/${req.params.id}`);
 
   if (giantbombGame) {
@@ -126,7 +110,7 @@ router.post('/games/:id', checkJwt, async (req, res) => {
 // Delete a game from your list
 // DELETE /list/games/:id
 
-router.delete('/games/:id', checkJwt, async (req, res) => {
+router.delete('/games/:id', auth.checkJwt, async (req, res) => {
   const list = await getUserList(req);
 
   await Game.deleteOne({
@@ -139,7 +123,7 @@ router.delete('/games/:id', checkJwt, async (req, res) => {
 // Update a game
 // PATCH /list/games/:id
 
-router.patch('/games/:id/', checkJwt, async (req, res) => {
+router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
   const list = await getUserList(req);
 
   await Game.findOneAndUpdate({
@@ -153,7 +137,7 @@ router.patch('/games/:id/', checkJwt, async (req, res) => {
 // Log time
 // PUT /list/games/:id/time
 
-router.put('/games/:id/time', checkJwt, async (req, res) => {
+router.put('/games/:id/time', auth.checkJwt, async (req, res) => {
   const list = await getUserList(req);
   const seconds = parseInt(req.body.seconds || 0);
 
