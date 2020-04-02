@@ -50,7 +50,7 @@ const checkJwt = jwt({
   issuer: `https://${process.env.AUTH0_DOMAIN}/`
 });
 
-const getList = async req => {
+const getUserList = async req => {
   return await List.findOneAndUpdate(
     { user: req.user.sub },
     {
@@ -69,7 +69,21 @@ const getList = async req => {
 // GET /list
 
 router.get('/', checkJwt, async (req, res) => {
-  const list = await getList(req);
+  const list = await getUserList(req);
+  const games = await Game.find(
+    { list: new mongoose.Types.ObjectId(list._id) }
+  );
+
+  res.status(200).json({
+    games
+  });
+});
+
+// Get a list
+// GET /list/:id
+
+router.get('/', async (req, res) => {
+  const list = await List.findOne({ _id: req.params.id });
   const games = await Game.find(
     { list: new mongoose.Types.ObjectId(list._id) }
   );
@@ -86,7 +100,7 @@ router.post('/games/:id', checkJwt, async (req, res) => {
   const giantbombGame = await giantbomb.query(`game/${req.params.id}`);
 
   if (giantbombGame) {
-    const list = await getList(req);
+    const list = await getUserList(req);
     const game = new Game({
       name: giantbombGame.name,
       platform: req.body.platform,
@@ -113,7 +127,7 @@ router.post('/games/:id', checkJwt, async (req, res) => {
 // DELETE /list/games/:id
 
 router.delete('/games/:id', checkJwt, async (req, res) => {
-  const list = await getList(req);
+  const list = await getUserList(req);
 
   await Game.deleteOne({
     list: new mongoose.Types.ObjectId(list._id),
@@ -126,7 +140,7 @@ router.delete('/games/:id', checkJwt, async (req, res) => {
 // PATCH /list/games/:id
 
 router.patch('/games/:id/', checkJwt, async (req, res) => {
-  const list = await getList(req);
+  const list = await getUserList(req);
 
   await Game.findOneAndUpdate({
     list: new mongoose.Types.ObjectId(list._id),
@@ -140,7 +154,7 @@ router.patch('/games/:id/', checkJwt, async (req, res) => {
 // PUT /list/games/:id/time
 
 router.put('/games/:id/time', checkJwt, async (req, res) => {
-  const list = await getList(req);
+  const list = await getUserList(req);
   const seconds = parseInt(req.body.seconds || 0);
 
   if (seconds > 0) {
