@@ -3,7 +3,7 @@ const mongoose = require('mongoose').set('debug', true);
 
 const giantbomb = require('./giantbomb');
 const auth = require('./auth');
-const { Game, List } = require('./schemas');
+const { Game, List, Profile } = require('./schemas');
 
 // Configure router
 
@@ -42,20 +42,25 @@ router.get('/', auth.checkJwt, async (req, res) => {
 // GET /list/:userid|:alias
 
 router.get('/:id', async (req, res) => {
-  let list = await List.findOne({ alias: req.params.id });
+  let profile = Profile.findOne({ alias: req.params.id });
 
-  if (!list) { // Try user _id
-    list = await List.findOne({ _id: req.params.id });
+  if (!profile) { // Try user _id
+    profile = Profile.findOne({ user: req.params.id });
   }
 
-  if (list) {
-    const games = await Game.find(
-      { list: new mongoose.Types.ObjectId(list._id) }
-    );
+  if (profile) {
+    try {
+      const list = await List.find({ user: profile.user });
+      const games = await Game.find(
+        { list: list._id }
+      );
 
-    res.status(200).json({
-      games
-    });
+      res.status(200).json({
+        games
+      });
+    } catch(e) {
+      res.status(500).json({  message: 'An unexpected error occured' });
+    }
   } else {
     res.status(404).json({ message: 'No such list found' });
   }
