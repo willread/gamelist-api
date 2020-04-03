@@ -1,5 +1,7 @@
 const mongoose = require('mongoose').set('debug', true);
 
+const giantbomb = require('./giantbomb');
+
 const GameSchema = mongoose.Schema({
     list: mongoose.Schema.Types.ObjectId,
     name: String,
