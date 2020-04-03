@@ -71,7 +71,10 @@ router.patch('/', auth.checkJwt, async (req, res) => {
                 }
             });
         } else if (e.name === 'ValidationError') {
-
+            res.status(400).json({
+                message: 'A validation error occured',
+                error: e
+            });
         } else {
             res.status(400).json({
                 message: 'An unexpected error occured'
