@@ -9,8 +9,8 @@ const ProfileSchema = mongoose.Schema({
         type: String,
         unique: true,
         required: false,
-        minlength: [3, 'Must be at least 2 characters'],
-        maxlength: [16, 'Must be less than 10 characters']
+        minlength: 3,
+        maxlength: 16
     }
 });
 
