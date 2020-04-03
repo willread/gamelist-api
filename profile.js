@@ -57,7 +57,8 @@ router.patch('/', auth.checkJwt, async (req, res) => {
             { user: req.user.sub },
             updates,
             {
-                new: true
+                new: true,
+                runValidators: true
             }
         );
 
