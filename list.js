@@ -64,17 +64,26 @@ router.get('/', auth.checkJwt, async (req, res) => {
 });
 
 // Get a list
-// GET /list/:username
+// GET /list/:userid|:alias
 
-router.get('/', async (req, res) => {
-  const list = await List.findOne({ _id: req.params.username });
-  const games = await Game.find(
-    { list: new mongoose.Types.ObjectId(list._id) }
-  );
+router.get('/id', async (req, res) => {
+  let list = await List.findOne({ alias: req.params.id });
 
-  res.status(200).json({
-    games
-  });
+  if (!list) { // Try user _id
+    list = await List.findOne({ _id: req.params.id });
+  }
+
+  if (list) {
+    const games = await Game.find(
+      { list: new mongoose.Types.ObjectId(list._id) }
+    );
+
+    res.status(200).json({
+      games
+    });
+  } else {
+    res.status(404).json({ message: 'No such list found' });
+  }
 });
 
 // Add a game to your list
