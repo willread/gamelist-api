@@ -9,8 +9,8 @@ const ProfileSchema = mongoose.Schema({
         type: String,
         unique: true,
         required: false,
-        minlength: 3,
-        maxlength: 16
+        minlength: [3, 'Must be at least 3 characters'],
+        maxlength: [16, 'Must be less than 10 characters']
     }
 });
 
@@ -57,8 +57,7 @@ router.patch('/', auth.checkJwt, async (req, res) => {
             { user: req.user.sub },
             updates,
             {
-                new: true,
-                runValidators: true
+                new: true
             }
         );
 
@@ -70,10 +69,11 @@ router.patch('/', auth.checkJwt, async (req, res) => {
                     alias: 'This alias has already been used'
                 }
             });
+        } else if (e.name === 'ValidationError') {
+
         } else {
             res.status(400).json({
-                message: 'An unexpected error occured',
-                error: e
+                message: 'An unexpected error occured'
             });
         }
     }
