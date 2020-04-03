@@ -45,7 +45,7 @@ router.get('/:id', async (req, res) => {
   let profile = await Profile.findOne({ alias: req.params.id });
 
   if (!profile) { // Try user _id
-    profile = await Profile.findOne({ user: req.params.id });
+    profile = await Profile.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) });
   }
 
   if (profile) {
