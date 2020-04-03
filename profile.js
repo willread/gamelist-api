@@ -51,7 +51,10 @@ router.patch('/', auth.checkJwt, async (req, res) => {
 
     const profile = await Profile.findOneAndUpdate(
         { user: req.user.sub },
-        updates
+        updates,
+        {
+            new: true
+        }
     );
 
     res.status(200).json(profile);
