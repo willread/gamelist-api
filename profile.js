@@ -2,19 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose').set('debug', true);
 
 const auth = require('./auth');
-
-const ProfileSchema = mongoose.Schema({
-    user: String,
-    alias: {
-        type: String,
-        unique: true,
-        required: false,
-        minlength: [3, 'Must be at least 3 characters'],
-        maxlength: [16, 'Must be less than 10 characters']
-    }
-});
-
-const Profile = mongoose.model('Profile', ProfileSchema);
+const { Profile } = require('./schemas');
 
 // Configure router
 

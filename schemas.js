@@ -28,9 +28,24 @@ const ListSchema = mongoose.Schema({
 
 const List = mongoose.model('List', ListSchema);
 
+const ProfileSchema = mongoose.Schema({
+    user: String,
+    alias: {
+        type: String,
+        unique: true,
+        required: false,
+        minlength: [3, 'Must be at least 3 characters'],
+        maxlength: [16, 'Must be less than 10 characters']
+    }
+});
+
+const Profile = mongoose.model('Profile', ProfileSchema);
+
 module.exports = {
     GameSchema,
     Game,
     ListSchema,
-    List
-}
+    List,
+    ProfileSchema,
+    Profile
+};
