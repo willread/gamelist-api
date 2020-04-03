@@ -54,9 +54,6 @@ router.patch('/', auth.checkJwt, async (req, res) => {
         updates
     );
 
-    profile.alias = profile._id; // Default to mongo id, can be edited later
-    await profile.save();
-
     res.status(200).json(profile);
 });
 
