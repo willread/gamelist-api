@@ -66,7 +66,7 @@ router.get('/', auth.checkJwt, async (req, res) => {
 // Get a list
 // GET /list/:userid|:alias
 
-router.get('/id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   let list = await List.findOne({ alias: req.params.id });
 
   if (!list) { // Try user _id
