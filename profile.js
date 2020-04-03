@@ -5,14 +5,20 @@ const auth = require('./auth');
 
 const ProfileSchema = mongoose.Schema({
     user: String,
-    alias: String
+    alias: {
+        type: String,
+        unique: true,
+        required: false,
+        min: [2, 'Must be at least 2 characters'],
+        max: [16, 'Must be less than 10 characters']
+    }
 });
 
 const Profile = mongoose.model('Profile', ProfileSchema);
 
 // Configure router
 
-var router = express.Router();
+const router = express.Router();
 
 // Get your profile
 // GET /profile
@@ -57,7 +63,18 @@ router.patch('/', auth.checkJwt, async (req, res) => {
 
         res.status(200).json(profile);
     } catch(e) {
-        res.status(400).json(e);
+        if (e.codeName === 'DuplicateKey' && e.keyPattern.alias) {
+            res.status(400).json({
+                fields: {
+                    alias: 'This alias has already been used'
+                }
+            });
+        } else {
+            res.status(400).json({
+                message: 'An unexpected error occured',
+                error: e
+            });
+        }
     }
 });
 
