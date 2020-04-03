@@ -66,14 +66,14 @@ router.patch('/', auth.checkJwt, async (req, res) => {
     } catch(e) {
         if (e.codeName === 'DuplicateKey' && e.keyPattern.alias) {
             res.status(400).json({
-                fields: {
+                errors: {
                     alias: 'This alias has already been used'
                 }
             });
         } else if (e.name === 'ValidationError') {
             res.status(400).json({
                 message: 'A validation error occured',
-                error: e
+                errors: e.errors
             });
         } else {
             res.status(400).json({
