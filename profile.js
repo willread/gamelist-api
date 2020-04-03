@@ -31,9 +31,6 @@ router.get('/', auth.checkJwt, async (req, res) => {
         }
     );
 
-    profile.alias = profile._id; // Default to mongo id, can be edited later
-    await profile.save();
-
     res.status(200).json(profile);
 });
 
