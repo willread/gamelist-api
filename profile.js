@@ -46,15 +46,19 @@ router.patch('/', auth.checkJwt, async (req, res) => {
         delete req.body.user;
     }
 
-    const profile = await Profile.findOneAndUpdate(
-        { user: req.user.sub },
-        updates,
-        {
-            new: true
-        }
-    );
+    try {
+        const profile = await Profile.findOneAndUpdate(
+            { user: req.user.sub },
+            updates,
+            {
+                new: true
+            }
+        );
 
-    res.status(200).json(profile);
+        res.status(200).json(profile);
+    } catch(e) {
+        res.status(400).json(e);
+    }
 });
 
 module.exports = router;
