@@ -50,12 +50,12 @@ router.get('/:id', async (req, res) => {
 
   if (profile) {
     try {
-      const list = await List.find({ user: profile.user });
+      const list = await List.findOne({ user: profile.user });
       const games = await Game.find(
         { list: list._id }
       );
 
-      res.status(200).json({ list });
+      res.status(200).json({ games });
     } catch(e) {
       res.status(500).json({  message: 'An unexpected error occured' });
     }
