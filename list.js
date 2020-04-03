@@ -42,10 +42,10 @@ router.get('/', auth.checkJwt, async (req, res) => {
 // GET /list/:userid|:alias
 
 router.get('/:id', async (req, res) => {
-  let profile = Profile.findOne({ alias: req.params.id });
+  let profile = await Profile.findOne({ alias: req.params.id });
 
   if (!profile) { // Try user _id
-    profile = Profile.findOne({ user: req.params.id });
+    profile = await Profile.findOne({ user: req.params.id });
   }
 
   if (profile) {
