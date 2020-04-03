@@ -55,9 +55,7 @@ router.get('/:id', async (req, res) => {
         { list: list._id }
       );
 
-      res.status(200).json({
-        games
-      });
+      res.status(200).json({ list });
     } catch(e) {
       res.status(500).json({  message: 'An unexpected error occured' });
     }
