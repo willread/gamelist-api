@@ -41,11 +41,29 @@ const ProfileSchema = mongoose.Schema({
 
 const Profile = mongoose.model('Profile', ProfileSchema);
 
+const ActivitySchema = mongoose.Schema({
+    user: {
+        type: String,
+        index: true
+    },
+    action: {
+        type: String,
+        enum: ['log-time', 'update-status', 'add-game']
+    },
+    metadata: {
+        type: Object
+    }
+})
+
+const Activity = mongoose.model('Activity', ActivitySchema);
+
 module.exports = {
     GameSchema,
     Game,
     ListSchema,
     List,
     ProfileSchema,
-    Profile
+    Profile,
+    ActivitySchema,
+    Activity
 };
