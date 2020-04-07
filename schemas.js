@@ -44,16 +44,24 @@ const Profile = mongoose.model('Profile', ProfileSchema);
 const ActivitySchema = mongoose.Schema({
     user: {
         type: String,
-        index: true
+        required: true
     },
     action: {
         type: String,
-        enum: ['log-time', 'update-status', 'add-game']
+        enum: ['log-time', 'update-status', 'add-game'],
+        required: true
     },
     metadata: {
         type: Object,
     }
-})
+});
+
+ActivitySchema.virtual('userAlias', {
+    ref: 'Profile',
+    localField: 'user',
+    foreignField: 'user',
+    justOne: true
+});
 
 const Activity = mongoose.model('Activity', ActivitySchema);
 
