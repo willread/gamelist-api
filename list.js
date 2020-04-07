@@ -115,14 +115,13 @@ router.delete('/games/:id', auth.checkJwt, async (req, res) => {
 
 router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
   const list = await getUserList(req);
-
-  await Game.findOneAndUpdate({
+  const game = await Game.findOneAndUpdate({
     list: new mongoose.Types.ObjectId(list._id),
     _id: new mongoose.Types.ObjectId(req.params.id)
   }, req.body);
 
   if (req.body.status) {
-    logActivity(req.user.sub, 'update-status', { status: req.body.status });
+    logActivity(req.user.sub, 'update-status', { status: req.body.status }, { game });
   }
 
   res.status(200).json({});
