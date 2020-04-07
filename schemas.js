@@ -51,8 +51,13 @@ const ActivitySchema = mongoose.Schema({
         enum: ['log-time', 'update-status', 'add-game'],
         required: true
     },
-    metadata: {
-        type: Object,
+    meta: {
+        type: mongoose.type.ObjectId,
+        refPath: 'metaModel'
+    },
+    metaModel: {
+        type: String,
+        enum: ['Game']
     }
 }, {
     toJSON: {
@@ -60,7 +65,7 @@ const ActivitySchema = mongoose.Schema({
     }
 });
 
-ActivitySchema.virtual('userAlias', {
+ActivitySchema.virtual('profile', {
     ref: 'Profile',
     localField: 'user',
     foreignField: 'user',

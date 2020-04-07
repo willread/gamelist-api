@@ -89,7 +89,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
 
     await game.save();
 
-    logActivity(req.user.sub,  'add-game', { game: game._id });
+    logActivity(req.user.sub,  'add-game', 'Game', game);
 
     res.status(200).json(game);
   } else {

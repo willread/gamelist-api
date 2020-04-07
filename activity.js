@@ -8,9 +8,9 @@ const { Activity } = require('./schemas');
 
 var router = express.Router();
 
-const logActivity = (user, action, metadata) => {
+const logActivity = (user, action, metaModel, meta) => {
     const activity = new Activity({
-        user, action, metadata
+        user, action, metaModel, meta: meta._id
     });
 
     activity.save();
@@ -23,7 +23,8 @@ router.get('/', async (req, res) => {
     const activities = await Activity.find()
         .sort({_id: -1})
         .limit(20)
-        .populate('userAlias');
+        .populate('profile')
+        .populate('meta');
 
     res.status(200).json({
       activities
