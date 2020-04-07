@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose').set('debug', true);
 
 const auth = require('./auth');
-const { Activity } = require('./schemas');
+const { Activity, Profile } = require('./schemas');
 
 // Configure router
 
