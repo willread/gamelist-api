@@ -51,7 +51,7 @@ router.get('/user/:id', async (req, res) => {
                 .populate('profile')
                 .populate('meta');
 
-        res.status(200).json({ activities });
+        res.status(200).json(activities);
         }
     } catch(e) {
         res.status(500).json({  message: 'An unexpected error occured' });
