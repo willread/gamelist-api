@@ -35,19 +35,27 @@ router.get('/', async (req, res) => {
 // GET /activity/user/:userid|:alias
 
 router.get('/user/:id', async (req, res) => {
-    let profile = await Profile.findOne({ alias: req.params.id });
+    try {
+        let profile = await Profile.findOne({ alias: req.params.id });
 
-    if (!profile) { // Try user _id
-      profile = await Profile.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) });
+        if (!profile) { // Try user _id
+            profile = await Profile.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) });
+        }
+
+        if (!profile) {
+            res.status(404).json({ message: 'No such user' });
+        } else {
+            const activities = await Activity.find({ user: profile.user })
+                .sort({_id: -1})
+                .limit(20)
+                .populate('profile')
+                .populate('meta');
+
+        res.status(200).json({ activities });
+        }
+    } catch(e) {
+        res.status(500).json({  message: 'An unexpected error occured' });
     }
-
-    const activities = await Activity.find({ user: profile.user })
-        .sort({_id: -1})
-        .limit(20)
-        .populate('profile')
-        .populate('meta');
-
-    res.status(200).json({ activities });
 });
 
 module.exports = {
