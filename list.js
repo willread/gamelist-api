@@ -135,7 +135,7 @@ router.put('/games/:id/time', auth.checkJwt, async (req, res) => {
   const seconds = parseInt(req.body.seconds || 0);
 
   if (seconds > 0) {
-    await Game.findOneAndUpdate({
+    const game = await Game.findOneAndUpdate({
       list: new mongoose.Types.ObjectId(list._id),
       _id: new mongoose.Types.ObjectId(req.params.id)
     }, {
@@ -143,6 +143,8 @@ router.put('/games/:id/time', auth.checkJwt, async (req, res) => {
         secondsPlayed: seconds
       }
     });
+
+    logActivity(req.user.sub,  'log-time', { seconds }, { game });
   }
 
   res.status(200).json({});
