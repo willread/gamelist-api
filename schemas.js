@@ -42,6 +42,7 @@ const ProfileSchema = mongoose.Schema({
 const Profile = mongoose.model('Profile', ProfileSchema);
 
 const ActivitySchema = mongoose.Schema({
+    time : { type : Date, default: Date.now },
     user: {
         type: String,
         required: true
