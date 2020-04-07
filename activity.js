@@ -22,7 +22,8 @@ const logActivity = (user, action, metadata) => {
 router.get('/', async (req, res) => {
     const activities = await Activity.find()
         .sort({_id: -1})
-        .limit(20);
+        .limit(20)
+        .populate('userAlias');
 
     res.status(200).json({
       activities
