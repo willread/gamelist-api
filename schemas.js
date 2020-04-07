@@ -51,7 +51,7 @@ const ActivitySchema = mongoose.Schema({
         enum: ['log-time', 'update-status', 'add-game']
     },
     metadata: {
-        type: Object
+        type: mongoose.type.ObjectId
     }
 })
 
