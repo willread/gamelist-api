@@ -52,7 +52,7 @@ const ActivitySchema = mongoose.Schema({
         required: true
     },
     meta: {
-        type: mongoose.type.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         refPath: 'metaModel'
     },
     metaModel: {
