@@ -54,6 +54,10 @@ const ActivitySchema = mongoose.Schema({
     metadata: {
         type: Object,
     }
+}, {
+    toJSON: {
+        virtuals: true
+    }
 });
 
 ActivitySchema.virtual('userAlias', {
