@@ -34,9 +34,7 @@ router.get('/', async (req, res) => {
         .populate('profile')
         .populate('game');
 
-    res.status(200).json({
-      activities
-    });
+    res.status(200).json({ activities );
   });
 
 // Get latest user activities
