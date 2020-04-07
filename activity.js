@@ -8,12 +8,15 @@ const { Activity } = require('./schemas');
 
 var router = express.Router();
 
-const logActivity = (action, metadata) => {
+const logActivity = (user, action, metadata) => {
     const activity = new Activity({
-        action, metadata
+        user, action, metadata
     });
 
     activity.save();
 };
 
-module.exports = router;
+module.exports = {
+    logActivity,
+    router
+};

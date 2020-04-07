@@ -71,4 +71,4 @@ router.patch('/', auth.checkJwt, async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = { router };

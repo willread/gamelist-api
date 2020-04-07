@@ -37,4 +37,4 @@ router.get('/', async (req, res) => {
     res.status(200).json(games);
 });
 
-module.exports = router;
+module.exports = { router };

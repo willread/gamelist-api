@@ -4,6 +4,7 @@ const mongoose = require('mongoose').set('debug', true);
 const giantbomb = require('./giantbomb');
 const auth = require('./auth');
 const { Game, List, Profile } = require('./schemas');
+const { logActivity } = require('./activity');
 
 // Configure router
 
@@ -88,6 +89,8 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
 
     await game.save();
 
+    logActivity(req.user.sub,  'add-game', { game: game._id });
+
     res.status(200).json(game);
   } else {
     res.status(500).json({}); // TODO
@@ -142,4 +145,4 @@ router.put('/games/:id/time', auth.checkJwt, async (req, res) => {
   res.status(200).json({});
 });
 
-module.exports = router;
+module.exports = { router };

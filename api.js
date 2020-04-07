@@ -51,9 +51,9 @@ app.get('/', (req, res) => {
 
 // Import modules
 
-app.use('/games', require('./games'));
-app.use('/list', require('./list'));
-app.use('/profile', require('./profile'));
+app.use('/games', require('./games').router);
+app.use('/list', require('./list').router);
+app.use('/profile', require('./profile')).router;
 
 // Handle authentication errors
 
