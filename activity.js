@@ -57,7 +57,7 @@ router.get('/user/:id', async (req, res) => {
                 .sort({_id: -1})
                 .limit(20)
                 .populate('profile')
-                .populate('meta');
+                .populate('game');
 
         res.status(200).json(activities);
         }
