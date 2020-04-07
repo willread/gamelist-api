@@ -18,6 +18,8 @@ const GameSchema = mongoose.Schema({
     },
     dateFinished: Date,
     pricePaid: Number
+}, {
+    timestamps: true
 });
 
 const Game = mongoose.model('Game', GameSchema);
@@ -37,12 +39,13 @@ const ProfileSchema = mongoose.Schema({
         minlength: [3, 'Must be at least 3 characters'],
         maxlength: [16, 'Must be less than 10 characters']
     }
+}, {
+    timestamps: true
 });
 
 const Profile = mongoose.model('Profile', ProfileSchema);
 
 const ActivitySchema = mongoose.Schema({
-    time : { type : Date, default: Date.now },
     user: {
         type: String,
         required: true
@@ -63,7 +66,8 @@ const ActivitySchema = mongoose.Schema({
 }, {
     toJSON: {
         virtuals: true
-    }
+    },
+    timestamps: true
 });
 
 ActivitySchema.virtual('profile', {
