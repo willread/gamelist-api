@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
 app.use('/games', require('./games').router);
 app.use('/list', require('./list').router);
 app.use('/profile', require('./profile').router);
-app.use('/activities', require('./activities').router);
+app.use('/activity', require('./activity').router);
 
 // Handle authentication errors
 
