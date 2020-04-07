@@ -55,13 +55,12 @@ const ActivitySchema = mongoose.Schema({
         enum: ['log-time', 'update-status', 'add-game'],
         required: true
     },
-    meta: {
+    game: {
         type: mongoose.Schema.Types.ObjectId,
-        refPath: 'metaModel'
+        ref: 'Game'
     },
-    metaModel: {
-        type: String,
-        enum: ['Game']
+    meta: {
+        type: Object
     }
 }, {
     toJSON: {

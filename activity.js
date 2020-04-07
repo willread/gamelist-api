@@ -8,10 +8,18 @@ const { Activity, Profile } = require('./schemas');
 
 var router = express.Router();
 
-const logActivity = (user, action, metaModel, meta) => {
-    const activity = new Activity({
-        user, action, metaModel, meta: meta._id
-    });
+const logActivity = (user, action, meta, models) => {
+    const params = {
+        user, action, meta
+    };
+
+    if (models) {
+        Object.keys(models).forEach(key => {
+            params[key] = models[key];
+        });
+    }
+
+    const activity = new Activity(params);
 
     activity.save();
 };
@@ -24,7 +32,7 @@ router.get('/', async (req, res) => {
         .sort({_id: -1})
         .limit(20)
         .populate('profile')
-        .populate('meta');
+        .populate('game');
 
     res.status(200).json({
       activities

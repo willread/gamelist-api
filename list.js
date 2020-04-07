@@ -89,7 +89,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
 
     await game.save();
 
-    logActivity(req.user.sub,  'add-game', 'Game', game);
+    logActivity(req.user.sub,  'add-game', {}, { game });
 
     res.status(200).json(game);
   } else {
@@ -120,6 +120,10 @@ router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
     list: new mongoose.Types.ObjectId(list._id),
     _id: new mongoose.Types.ObjectId(req.params.id)
   }, req.body);
+
+  if (req.body.status) {
+    logActivity(req.user.sub, 'update-status', { status: req.body.status });
+  }
 
   res.status(200).json({});
 });
