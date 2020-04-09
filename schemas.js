@@ -91,3 +91,16 @@ ActivitySchema.virtual('profile', {
 });
 
 const Activity = mongoose.model('Activity', ActivitySchema);
+
+module.exports = {
+    GameSchema,
+    Game,
+    ListSchema,
+    List,
+    ListGameSchema,
+    ListGame,
+    ProfileSchema,
+    Profile,
+    ActivitySchema,
+    Activity
+};
