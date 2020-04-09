@@ -102,7 +102,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
     });
 
     if (!listGameExists) {
-      const listGame = new ListGame({
+      let listGame = new ListGame({
         game: game._id,
         list: list._id,
         status: 'unplayed',
@@ -110,7 +110,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
       });
 
       await listGame.save();
-      await listGame.populate('game');
+      listGame = await listGame.populate('game');
 
       logActivity(req.user.sub,  'add-game', {}, { game });
 
