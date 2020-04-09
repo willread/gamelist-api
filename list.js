@@ -56,7 +56,8 @@ router.get('/:id', async (req, res) => {
       const list = await List.findOne({ user: profile.user });
       const games = await ListGame.find(
         { list: list._id }
-      );
+      )
+        .populate('game');
 
       res.status(200).json({ games });
     } catch(e) {
