@@ -31,7 +31,7 @@ const getUserList = async req => {
 router.get('/', auth.checkJwt, async (req, res) => {
   const list = await getUserList(req);
   const listGames = await ListGame.find(
-    { list: new mongoose.Types.ObjectId(list._id) }
+    { list: list._id }
   )
     .populate('game');
 
