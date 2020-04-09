@@ -76,7 +76,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
 
   if (giantbombGame) {
     const list = await getUserList(req);
-    let game = Game.findOne({
+    let game = await Game.findOne({
       name: giantbombGame.name,
       platform: req.body.platform
     });
