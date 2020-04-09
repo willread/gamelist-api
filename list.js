@@ -89,7 +89,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
 
     await game.save();
 
-    const existingListGame = await ListGame.find({
+    const existingListGame = await ListGame.exists({
       list: list._id,
       game: game._id,
       platform: game.platform
