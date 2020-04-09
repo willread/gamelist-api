@@ -76,18 +76,25 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
 
   if (giantbombGame) {
     const list = await getUserList(req);
-    const game = new Game({
+    let game = Game.findOne({
       name: giantbombGame.name,
-      platform: req.body.platform,
-      images: {
-        icon: giantbombGame.image.icon_url,
-        original: giantbombGame.image.original_url,
-        thumbnail: giantbombGame.image.thumb_url
-      },
-      genres: giantbombGame.genres.map(genre => genre.name),
+      platform: req.body.platform
     });
 
-    await game.save();
+    if (!game) {
+      game = new Game({
+        name: giantbombGame.name,
+        platform: req.body.platform,
+        images: {
+          icon: giantbombGame.image.icon_url,
+          original: giantbombGame.image.original_url,
+          thumbnail: giantbombGame.image.thumb_url
+        },
+        genres: giantbombGame.genres.map(genre => genre.name),
+      });
+
+      await game.save();
+    }
 
     const existingListGame = await ListGame.exists({
       list: list._id,
