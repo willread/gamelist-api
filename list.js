@@ -157,13 +157,3 @@ router.put('/games/:id/time', auth.checkJwt, async (req, res) => {
 });
 
 module.exports = { router };
-
-db.games.update({}, {
-  $unset: {
-    list: '',
-    status: '',
-    secondsPlayed: '',
-    timeLog: '',
-    updatedAt: ''
-  }
-}, false, true)
