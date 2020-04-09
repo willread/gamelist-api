@@ -96,13 +96,12 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
       await game.save();
     }
 
-    const existingListGame = await ListGame.exists({
+    const listGameExists = await ListGame.exists({
       list: list._id,
-      game: game._id,
-      platform: game.platform
+      game: game._id
     });
 
-    if (!existingListGame) {
+    if (!listGameExists) {
       const listGame = new ListGame({
         game: game._id,
         list: list._id,
