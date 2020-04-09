@@ -42,7 +42,7 @@ const ListGameSchema = mongoose.Schema({
     timestamps: true
 });
 
-const ListGame = mongoose.model('ListGame', ListSchema);
+const ListGame = mongoose.model('ListGame', ListGameSchema);
 
 const ProfileSchema = mongoose.Schema({
     user: String,
