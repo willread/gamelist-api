@@ -107,10 +107,10 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
         list: list._id,
         status: 'unplayed',
         secondsPlayed: 0
-      })
-        .populate('game');
+      });
 
       await listGame.save();
+      await listGame.populate('game');
 
       logActivity(req.user.sub,  'add-game', {}, { game });
 
