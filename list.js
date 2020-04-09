@@ -36,7 +36,8 @@ router.get('/', auth.checkJwt, async (req, res) => {
     .populate('game');
 
   res.status(200).json({
-    games: listGames
+    games: listGames,
+    list
   });
 });
 
