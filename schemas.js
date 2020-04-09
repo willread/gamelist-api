@@ -3,21 +3,13 @@ const mongoose = require('mongoose').set('debug', true);
 const giantbomb = require('./giantbomb');
 
 const GameSchema = mongoose.Schema({
-    list: mongoose.Schema.Types.ObjectId,
     name: String,
     images: Object, // FIXME,
     platform: {
       type: String,
       enum: giantbomb.platforms
     },
-    genres: Array,
-    secondsPlayed: Number,
-    status: {
-      type: String,
-      enum: ['playing', 'finished', 'stopped', 'unplayed']
-    },
-    dateFinished: Date,
-    pricePaid: Number
+    genres: Array
 }, {
     timestamps: true
 });
@@ -26,9 +18,31 @@ const Game = mongoose.model('Game', GameSchema);
 
 const ListSchema = mongoose.Schema({
     user: String
+}, {
+    timestamps: true
 });
 
 const List = mongoose.model('List', ListSchema);
+
+const ListGameSchema = mongoose.Schema({
+    list: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'List'
+    },
+    game: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Game'
+    },
+    secondsPlayed: Number,
+    status: {
+      type: String,
+      enum: ['playing', 'finished', 'stopped', 'unplayed']
+    }
+}, {
+    timestamps: true
+});
+
+const ListGame = mongoose.model('ListGame', ListSchema);
 
 const ProfileSchema = mongoose.Schema({
     user: String,
@@ -77,14 +91,3 @@ ActivitySchema.virtual('profile', {
 });
 
 const Activity = mongoose.model('Activity', ActivitySchema);
-
-module.exports = {
-    GameSchema,
-    Game,
-    ListSchema,
-    List,
-    ProfileSchema,
-    Profile,
-    ActivitySchema,
-    Activity
-};

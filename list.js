@@ -3,7 +3,7 @@ const mongoose = require('mongoose').set('debug', true);
 
 const giantbomb = require('./giantbomb');
 const auth = require('./auth');
-const { Game, List, Profile } = require('./schemas');
+const { ListGame, Game, List, Profile } = require('./schemas');
 const { logActivity } = require('./activity');
 
 // Configure router
@@ -30,12 +30,13 @@ const getUserList = async req => {
 
 router.get('/', auth.checkJwt, async (req, res) => {
   const list = await getUserList(req);
-  const games = await Game.find(
+  const listGames = await ListGame.find(
     { list: new mongoose.Types.ObjectId(list._id) }
-  );
+  )
+    .populate('game');
 
   res.status(200).json({
-    games
+    games: listGames
   });
 });
 
@@ -52,7 +53,7 @@ router.get('/:id', async (req, res) => {
   if (profile) {
     try {
       const list = await List.findOne({ user: profile.user });
-      const games = await Game.find(
+      const games = await ListGame.find(
         { list: list._id }
       );
 
@@ -82,16 +83,22 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
         thumbnail: giantbombGame.image.thumb_url
       },
       genres: giantbombGame.genres.map(genre => genre.name),
+    });
+
+    await game.save();
+
+    const listGame = new ListGame({
+      game: game._id,
       list: list._id,
       status: 'unplayed',
       secondsPlayed: 0
     });
 
-    await game.save();
+    await listGame.save();
 
     logActivity(req.user.sub,  'add-game', {}, { game });
 
-    res.status(200).json(game);
+    res.status(200).json(listGame);
   } else {
     res.status(500).json({}); // TODO
   }
@@ -101,10 +108,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
 // DELETE /list/games/:id
 
 router.delete('/games/:id', auth.checkJwt, async (req, res) => {
-  const list = await getUserList(req);
-
-  await Game.deleteOne({
-    list: new mongoose.Types.ObjectId(list._id),
+  await ListGame.deleteOne({
     _id: new mongoose.Types.ObjectId(req.params.id)
   })
   res.status(200).json({});
@@ -115,13 +119,14 @@ router.delete('/games/:id', auth.checkJwt, async (req, res) => {
 
 router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
   const list = await getUserList(req);
-  const game = await Game.findOneAndUpdate({
+  const listGame = await ListGame.findOneAndUpdate({
     list: new mongoose.Types.ObjectId(list._id),
     _id: new mongoose.Types.ObjectId(req.params.id)
-  }, req.body);
+  }, req.body)
+    .populate('game');
 
   if (req.body.status) {
-    logActivity(req.user.sub, 'update-status', { status: req.body.status }, { game });
+    logActivity(req.user.sub, 'update-status', { status: req.body.status }, { listGame.game });
   }
 
   res.status(200).json({});
@@ -135,19 +140,30 @@ router.put('/games/:id/time', auth.checkJwt, async (req, res) => {
   const seconds = parseInt(req.body.seconds || 0);
 
   if (seconds > 0) {
-    const game = await Game.findOneAndUpdate({
+    const listGame = await ListGame.findOneAndUpdate({
       list: new mongoose.Types.ObjectId(list._id),
       _id: new mongoose.Types.ObjectId(req.params.id)
     }, {
       $inc: {
         secondsPlayed: seconds
       }
-    });
+    })
+      .populate('game');
 
-    logActivity(req.user.sub,  'log-time', { seconds }, { game });
+    logActivity(req.user.sub,  'log-time', { seconds }, { game: listGame.game });
   }
 
   res.status(200).json({});
 });
 
 module.exports = { router };
+
+db.games.update({}, {
+  $unset: {
+    list: '',
+    status: '',
+    secondsPlayed: '',
+    timeLog: '',
+    updatedAt: ''
+  }
+}, false, true)
