@@ -126,7 +126,7 @@ router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
     .populate('game');
 
   if (req.body.status) {
-    logActivity(req.user.sub, 'update-status', { status: req.body.status }, { listGame.game });
+    logActivity(req.user.sub, 'update-status', { status: req.body.status }, { game: listGame.game });
   }
 
   res.status(200).json({});
