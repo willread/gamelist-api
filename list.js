@@ -110,7 +110,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
       });
 
       await listGame.save();
-      listGame = await listGame.populate('game');
+      listGame.game = game;
 
       logActivity(req.user.sub,  'add-game', {}, { game });
 
