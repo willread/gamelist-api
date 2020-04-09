@@ -89,18 +89,30 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
 
     await game.save();
 
-    const listGame = new ListGame({
-      game: game._id,
+    const existingListGame = await ListGame.find({
       list: list._id,
-      status: 'unplayed',
-      secondsPlayed: 0
+      game: game._id,
+      platform: game.platform
     });
 
-    await listGame.save();
+    if (!existingListGame) {
+      const listGame = new ListGame({
+        game: game._id,
+        list: list._id,
+        status: 'unplayed',
+        secondsPlayed: 0
+      });
 
-    logActivity(req.user.sub,  'add-game', {}, { game });
+      await listGame.save();
 
-    res.status(200).json(listGame);
+      logActivity(req.user.sub,  'add-game', {}, { game });
+
+      res.status(200).json(listGame);
+    } else {
+      res.status(400).json({
+        message: 'This game is already in your list'
+      });
+    }
   } else {
     res.status(500).json({}); // TODO
   }
