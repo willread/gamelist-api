@@ -83,10 +83,10 @@ async function logTime(listGameId, seconds, user) {
                 secondsPlayed: seconds
             }
         },
-        { returnNewDocument: true }
+        { returnOriginal: false }
     );
 
-    const game = (await listGame.populate('game')).game;
+    await listGame.populate('game');
 
     logActivity(user,  'log-time', { seconds }, { game: listGame.game });
 
@@ -102,7 +102,7 @@ router.put('/playing', auth.checkJwt, async (req, res) => {
         // We never stopped playing the last game, log the time for that one before we update
 
         if (profile.playing && profile.playing.listGame) {
-            const seconds = (new Date()).getTime() - profile.playing.startedAt.getTime();
+            const seconds = Math.floor(((new Date()).getTime() - profile.playing.startedAt.getTime()) / 1000);
 
             await logTime(profile.playing.listGame, seconds, req.user.sub);
         }
