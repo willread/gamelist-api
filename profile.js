@@ -86,9 +86,11 @@ async function logTime(listGameId, seconds, user) {
         { returnNewDocument: true }
     );
 
-    await listGame.populate('game');
+    const game = (await listGame.populate('game')).game;
 
     logActivity(user,  'log-time', { seconds }, { game: listGame.game });
+
+    return listGame.secondsPlayed;
 }
 
 router.put('/playing', auth.checkJwt, async (req, res) => {
@@ -125,11 +127,12 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         const profile = await Profile.findOne(
             { user: req.user.sub }
         );
+        let secondsPlayed;
 
         if (profile.playing && profile.playing.listGame) {
             const seconds = Math.floor(((new Date()).getTime() - profile.playing.startedAt.getTime()) / 1000);
 
-            await logTime(profile.playing.listGame, seconds, req.user.sub);
+            secondsPlayed = await logTime(profile.playing.listGame, seconds, req.user.sub);
         }
 
         profile.playing = {
@@ -139,7 +142,9 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
 
         await profile.save();
 
-        res.status(200).json(profile);
+        res.status(200).json({
+            secondsPlayed
+        });
     } catch(e) {
         res.status(400).json({
             message: 'An unexpected error occured'
