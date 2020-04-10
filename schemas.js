@@ -55,7 +55,7 @@ const ProfileSchema = mongoose.Schema({
     },
     playing: {
         listGame: {
-            type: string,
+            type: String,
             ref: 'ListGame'
         },
         startedAt: Date
