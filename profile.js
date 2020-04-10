@@ -101,7 +101,7 @@ router.put('/playing', auth.checkJwt, async (req, res) => {
         if (profile.playing && profile.playing.game) {
             const seconds = (new Date()).getTime() - profile.playing.startedAt.getTime();
 
-            logTime(profile.playing.game, seconds);
+            logTime(profile.playing.listGame, seconds);
         }
 
         profile.playing = {
@@ -128,7 +128,7 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         if (profile.playing && profile.playing.game) {
             const seconds = (new Date()).getTime() - profile.playing.startedAt.getTime();
 
-            logTime(profile.playing.game, seconds);
+            logTime(profile.playing.listGame, seconds);
         }
 
         profile.playing = {
