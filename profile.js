@@ -3,6 +3,7 @@ const mongoose = require('mongoose').set('debug', true);
 
 const auth = require('./auth');
 const { Profile, ListGame } = require('./schemas');
+const { logActivity } = require('./activity');
 
 // Configure router
 
@@ -114,13 +115,13 @@ router.put('/playing', auth.checkJwt, async (req, res) => {
         res.status(200).json(profile);
     } catch(e) {
         res.status(400).json({
-            message: 'An unexpected error occured',
-            error: e
+            message: 'An unexpected error occured'
         });
     }
 });
 
 router.delete('/playing', auth.checkJwt, async (req, res) => {
+    try {
         const profile = await Profile.findOne(
             { user: req.user.sub }
         );
@@ -139,6 +140,11 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         await profile.save();
 
         res.status(200).json(profile);
+    } catch(e) {
+        res.status(400).json({
+            message: 'An unexpected error occured'
+        });
+    }
 });
 
 module.exports = { router };
