@@ -52,6 +52,13 @@ const ProfileSchema = mongoose.Schema({
         required: false,
         minlength: [3, 'Must be at least 3 characters'],
         maxlength: [16, 'Must be less than 10 characters']
+    },
+    playing: {
+        listGame: {
+            type: string,
+            ref: 'ListGame'
+        },
+        startedAt: Date
     }
 }, {
     timestamps: true

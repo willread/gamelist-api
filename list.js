@@ -153,28 +153,4 @@ router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
   res.status(200).json({});
 });
 
-// Log time
-// PUT /list/games/:id/time
-
-router.put('/games/:id/time', auth.checkJwt, async (req, res) => {
-  const list = await getUserList(req);
-  const seconds = parseInt(req.body.seconds || 0);
-
-  if (seconds > 0) {
-    const listGame = await ListGame.findOneAndUpdate({
-      list: new mongoose.Types.ObjectId(list._id),
-      _id: new mongoose.Types.ObjectId(req.params.id)
-    }, {
-      $inc: {
-        secondsPlayed: seconds
-      }
-    })
-      .populate('game');
-
-    logActivity(req.user.sub,  'log-time', { seconds }, { game: listGame.game });
-  }
-
-  res.status(200).json({});
-});
-
 module.exports = { router };

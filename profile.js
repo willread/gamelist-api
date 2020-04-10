@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose').set('debug', true);
 
 const auth = require('./auth');
-const { Profile } = require('./schemas');
+const { Profile, ListGame } = require('./schemas');
 
 // Configure router
 
@@ -68,6 +68,81 @@ router.patch('/', auth.checkJwt, async (req, res) => {
                 message: 'An unexpected error occured'
             });
         }
+    }
+});
+
+// Start playing a game
+// PUT /profile/playing { game }
+
+async function logTime(listGameId, seconds) {
+    const listGame = await ListGame.findOneAndUpdate(
+        { _id: listGameId },
+        {
+            $inc: {
+                secondsPlaying: seconds
+            }
+        },
+        { returnNewDocument: true }
+    );
+
+    await listGame.populate('game');
+
+    logActivity(req.user.sub,  'log-time', { seconds }, { game: listGame.game });
+}
+
+router.put('/playing', auth.checkJwt, async (req, res) => {
+    try {
+        const profile = await Profile.findOne(
+            { user: req.user.sub }
+        );
+
+        // We never stopped playing the last game, log the time for that one before we update
+
+        if (profile.playing && profile.playing.game) {
+            const seconds = (new Date()).getTime() - profile.playing.startedAt.getTime();
+
+            logTime(profile.playing.game, seconds);
+        }
+
+        profile.playing = {
+            listGame: req.body.listGame,
+            startedAt: new Date()
+        };
+
+        await profile.save();
+
+        res.status(200).json(profile);
+    } catch(e) {
+        res.status(400).json({
+            message: 'An unexpected error occured'
+        });
+    }
+});
+
+router.delete('/playing', auth.checkJwt, async (req, res) => {
+    try {
+        const profile = await Profile.findOne(
+            { user: req.user.sub }
+        );
+
+        if (profile.playing && profile.playing.game) {
+            const seconds = (new Date()).getTime() - profile.playing.startedAt.getTime();
+
+            logTime(profile.playing.game, seconds);
+        }
+
+        profile.playing = {
+            listGame: null,
+            startedAt: null
+        };
+
+        await profile.save();
+
+        res.status(200).json(profile);
+    } catch(e) {
+        res.status(400).json({
+            message: 'An unexpected error occured'
+        });
     }
 });
 
