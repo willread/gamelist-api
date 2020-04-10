@@ -75,7 +75,7 @@ router.patch('/', auth.checkJwt, async (req, res) => {
 // Start playing a game
 // PUT /profile/playing { game }
 
-async function logTime(listGameId, seconds) {
+async function logTime(listGameId, seconds, user) {
     const listGame = await ListGame.findOneAndUpdate(
         { _id: listGameId },
         {
@@ -88,7 +88,7 @@ async function logTime(listGameId, seconds) {
 
     await listGame.populate('game');
 
-    logActivity(req.user.sub,  'log-time', { seconds }, { game: listGame.game });
+    logActivity(user,  'log-time', { seconds }, { game: listGame.game });
 }
 
 router.put('/playing', auth.checkJwt, async (req, res) => {
@@ -102,7 +102,7 @@ router.put('/playing', auth.checkJwt, async (req, res) => {
         if (profile.playing && profile.playing.listGame) {
             const seconds = (new Date()).getTime() - profile.playing.startedAt.getTime();
 
-            await logTime(profile.playing.listGame, seconds);
+            await logTime(profile.playing.listGame, seconds, req.user.sub);
         }
 
         profile.playing = {
@@ -121,7 +121,7 @@ router.put('/playing', auth.checkJwt, async (req, res) => {
 });
 
 router.delete('/playing', auth.checkJwt, async (req, res) => {
-
+    try {
         const profile = await Profile.findOne(
             { user: req.user.sub }
         );
@@ -129,7 +129,7 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         if (profile.playing && profile.playing.listGame) {
             const seconds = (new Date()).getTime() - profile.playing.startedAt.getTime();
 
-            await logTime(profile.playing.listGame, seconds);
+            await logTime(profile.playing.listGame, seconds, req.user.sub);
         }
 
         profile.playing = {
@@ -140,7 +140,11 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         await profile.save();
 
         res.status(200).json(profile);
-
+    } catch(e) {
+        res.status(400).json({
+            message: 'An unexpected error occured'
+        });
+    }
 });
 
 module.exports = { router };
