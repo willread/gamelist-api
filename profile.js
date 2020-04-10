@@ -121,7 +121,6 @@ router.put('/playing', auth.checkJwt, async (req, res) => {
 });
 
 router.delete('/playing', auth.checkJwt, async (req, res) => {
-    try {
         const profile = await Profile.findOne(
             { user: req.user.sub }
         );
@@ -140,7 +139,6 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         await profile.save();
 
         res.status(200).json(profile);
-    }
 });
 
 module.exports = { router };
