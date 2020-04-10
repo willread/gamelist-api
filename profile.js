@@ -79,7 +79,7 @@ async function logTime(listGameId, seconds) {
         { _id: listGameId },
         {
             $inc: {
-                secondsPlaying: seconds
+                secondsPlayed: seconds
             }
         },
         { returnNewDocument: true }
