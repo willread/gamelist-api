@@ -140,11 +140,6 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         await profile.save();
 
         res.status(200).json(profile);
-    } catch(e) {
-        res.status(400).json({
-            message: 'An unexpected error occured',
-            error: e
-        });
     }
 });
 
