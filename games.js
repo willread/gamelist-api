@@ -50,7 +50,7 @@ router.get('/popular', async (req, res) => {
 
         res.status(200).json(games);
     } catch(e) {
-        res.status(500).json({  message: 'An unexpected error occured' });
+        res.status(500).json({  message: 'An unexpected error occured', error: e });
     }
 });
 
