@@ -49,9 +49,9 @@ router.get('/popular', async (req, res) => {
                 { $group: { _id: '$game', count: { $sum: 1 } } },
                 { $sort: { count: -1 } },
                 { $limit: 10 },
-                { $lookup: { from: 'games', localField: '$game', foreignField: '_id', as: 'game'} },
-                { $unwind: '$game' },
-                { $project: { _id: 0, game: true, count: true } }
+                { $lookup: { from: 'games', localField: 'game', foreignField: '_id', as: 'game'} },
+                // { $unwind: '$game' },
+                // { $project: { _id: 0, game: true, count: true } }
             ]);
 
         res.status(200).json(games);
