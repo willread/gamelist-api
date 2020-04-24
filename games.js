@@ -8,6 +8,10 @@ const giantbomb = require('./giantbomb');
 
 const router = express.Router();
 
+// Convert CDN paths
+
+const cdnImage = url => url.replace(/giantbomb1\.cbsistatic\.com/g, 'cdn-images.gamera.org');
+
 // Search for games
 
 router.get('/', async (req, res) => {
@@ -27,9 +31,9 @@ router.get('/', async (req, res) => {
                     id: result.id,
                     name: result.name,
                     images: {
-                        icon: result.image.icon_url,
-                        original: result.image.original_url,
-                        thumbnail: result.image.thumb_url
+                        icon: cdnImage(result.image.icon_url),
+                        original: cdnImage(result.image.original_url),
+                        thumbnail: cdnImage(result.image.thumb_url)
                     },
                     platform: platform.abbreviation
                 });
@@ -60,4 +64,7 @@ router.get('/popular', async (req, res) => {
     }
 });
 
-module.exports = { router };
+module.exports = {
+    router,
+    cdnImage
+ };
