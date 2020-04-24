@@ -133,7 +133,7 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         );
         let secondsPlayed;
 
-        if (!req.body.cancel) {
+        if (!req.params.cancel) {
             if (profile.playing && profile.playing.listGame) {
                 const seconds = Math.floor(((new Date()).getTime() - profile.playing.startedAt.getTime()) / 1000);
 
