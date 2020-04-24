@@ -50,8 +50,8 @@ router.get('/popular', async (req, res) => {
                 { $sort: { count: -1 } },
                 { $limit: 10 },
                 { $lookup: { from: 'games', localField: 'game', foreignField: '_id', as: 'game'} },
-                // { $unwind: '$game' },
-                // { $project: { _id: 0, game: true, count: true } }
+                { $unwind: '$game' },
+                { $project: { _id: 0, game: true, count: true } }
             ]);
 
         res.status(200).json({foo: 'bar'});
