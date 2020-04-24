@@ -122,6 +122,10 @@ router.put('/playing', auth.checkJwt, async (req, res) => {
     }
 });
 
+// Stop playing a game and log the time
+// If the cancel flag is set, no time will be logged
+// DELETE /playing { cancel?: boolean }
+
 router.delete('/playing', auth.checkJwt, async (req, res) => {
     try {
         const profile = await Profile.findOne(
@@ -129,10 +133,12 @@ router.delete('/playing', auth.checkJwt, async (req, res) => {
         );
         let secondsPlayed;
 
-        if (profile.playing && profile.playing.listGame) {
-            const seconds = Math.floor(((new Date()).getTime() - profile.playing.startedAt.getTime()) / 1000);
+        if (!req.body.cancel) {
+            if (profile.playing && profile.playing.listGame) {
+                const seconds = Math.floor(((new Date()).getTime() - profile.playing.startedAt.getTime()) / 1000);
 
-            secondsPlayed = await logTime(profile.playing.listGame, seconds, req.user.sub);
+                secondsPlayed = await logTime(profile.playing.listGame, seconds, req.user.sub);
+            }
         }
 
         profile.playing = {
