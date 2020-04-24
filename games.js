@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
 router.get('/popular', async (req, res) => {
     try {
         const games = await ListGame
-            .aggregate({ $limit: 10 })
+            .aggregate([{ $limit: 10 }])
             .sortByCount('game');
 
         res.status(200).json(games);
