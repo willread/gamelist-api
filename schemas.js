@@ -3,7 +3,6 @@ const mongoose = require('mongoose').set('debug', true);
 const giantbomb = require('./giantbomb');
 
 const GameSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     name: String,
     images: Object, // FIXME,
     platform: {
@@ -26,7 +25,6 @@ const ListSchema = mongoose.Schema({
 const List = mongoose.model('List', ListSchema);
 
 const ListGameSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     list: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'List'
