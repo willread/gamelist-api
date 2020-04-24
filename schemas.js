@@ -26,13 +26,15 @@ const List = mongoose.model('List', ListSchema);
 
 const ListGameSchema = mongoose.Schema({
     list: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'List'
     },
     game: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'Game'
     },
+    physicalCopy: Boolean,
+    digitalCopy: Boolean,
     secondsPlayed: Number,
     status: {
       type: String,
