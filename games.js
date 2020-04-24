@@ -54,7 +54,7 @@ router.get('/popular', async (req, res) => {
                 { $project: { _id: 0, game: true, count: true } }
             ]);
 
-        res.status(200).json({foo: 'bar'});
+        res.status(200).json(games);
     } catch(e) {
         res.status(500).json({  message: 'An unexpected error occured', error: e });
     }
