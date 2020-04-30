@@ -52,7 +52,7 @@ router.get('/popular', async (req, res) => {
             .aggregate([
                 { $group: { _id: '$game', count: { $sum: 1 } } },
                 { $sort: { count: -1 } },
-                { $limit: 10 },
+                { $limit: 11 },
                 { $lookup: { from: 'games', localField: '_id', foreignField: '_id', as: 'game'} },
                 { $unwind: '$game' },
                 { $project: { _id: 0, game: true, count: true } }
