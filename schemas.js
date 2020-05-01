@@ -95,7 +95,7 @@ const ActivitySchema = mongoose.Schema({
 ActivitySchema.virtual('profile', {
     ref: 'Profile',
     localField: 'user',
-    foreignField: '_id',
+    foreignField: 'user',
     justOne: true
 });
 
