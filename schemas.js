@@ -47,8 +47,6 @@ const ListGameSchema = mongoose.Schema({
 ListGameSchema.virtual('secondsPlayed').get(async function() {
     // if (this._secondsPlayed) { return this._secondsPlayed; }
 
-console.log('list', this.list);
-
     const list = await List.findOne({ _id: this.list });
     const game = this.game
 
@@ -70,6 +68,8 @@ console.log('list', this.list);
     ]);
 
     // this._secondsPlayed = aggregate.total;
+
+    console.log('aggregate', aggregate);
 
     return aggregate;
 });
