@@ -199,7 +199,7 @@ router.delete('/games/:id/playing', auth.checkJwt, async (req, res) => {
       if (listGame.startedPlayingAt) {
         const seconds = Math.floor(((new Date()).getTime() - listGame.startedPlayingAt.getTime()) / 1000);
 
-        secondsPlayed = await logTime(profile.playing.listGame, seconds, req.user.sub);
+        secondsPlayed = await logTime(listGame, seconds, req.user.sub);
       }
     }
 
