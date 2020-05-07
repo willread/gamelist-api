@@ -156,18 +156,19 @@ router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
 // Start playing a game
 // PUT /list/games/:id/playing
 
-async function logTime(listGameId, seconds, user) {
+async function logTime(listGameId, seconds, startedPlayingAt, user) {
   const listGame = await ListGame.findOne({ _id: listGameId });
 
   await listGame.populate('game');
-  await logActivity(user,  'log-time', { seconds }, { game: listGame.game });
+  await logActivity(user,  'log-time', { seconds, startedPlayingAt }, {game: listGame.game });
   await listGame.updateSecondsPlayed()
 }
 
 router.put('/games/:id/playing', auth.checkJwt, async (req, res) => {
   try {
     const list = await getUserList(req);
-    const listGame = await ListGame.findOneAndUpdate({
+
+    await ListGame.findOneAndUpdate({
       list: new mongoose.Types.ObjectId(list._id),
       _id: new mongoose.Types.ObjectId(req.params.id)
     }, {
@@ -199,7 +200,7 @@ router.delete('/games/:id/playing', auth.checkJwt, async (req, res) => {
       if (listGame.startedPlayingAt) {
         const seconds = Math.floor(((new Date()).getTime() - listGame.startedPlayingAt.getTime()) / 1000);
 
-        secondsPlayed = await logTime(listGame, seconds, req.user.sub);
+        secondsPlayed = await logTime(listGame, seconds, listGame.startedPlayingAt, req.user.sub);
       }
     }
 

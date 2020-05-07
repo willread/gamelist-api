@@ -69,6 +69,7 @@ ListGameSchema.method('updateSecondsPlayed', (function(cb) {
         },
         { $project: { _id: 0, total: true } }
     ], function(err, aggregate) {
+        console.log('result', err, aggregate);
         listGame.secondsPlayed = aggregate[0].total;
         listGame.save();
 
