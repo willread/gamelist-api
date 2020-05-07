@@ -35,13 +35,38 @@ const ListGameSchema = mongoose.Schema({
     },
     physicalCopy: Boolean,
     digitalCopy: Boolean,
-    secondsPlayed: Number,
     status: {
       type: String,
       enum: ['playing', 'finished', 'stopped', 'unplayed']
-    }
+    },
+    startedPlayingAt: Date
 }, {
     timestamps: true
+});
+
+ListGameSchema.virtual('secondsPlayed').get(async () => {
+    // if (this._secondsPlayed) { return this._secondsPlayed; }
+
+    const list = await List.find({ _id: this.list });
+
+    const aggregate = Activity.aggregate([
+        {
+            $match: {
+                action: 'log-time',
+                game: this.game,
+                user: list.user
+            },
+            $group: {
+                _id: null,
+                total: { $sum: '$meta.seconds'}
+            }
+        },
+        { $project: { _id: 0, total: true } }
+    ]);
+
+    // this._secondsPlayed = aggregate.total;
+
+    return aggregate;
 });
 
 const ListGame = mongoose.model('ListGame', ListGameSchema);
@@ -54,13 +79,6 @@ const ProfileSchema = mongoose.Schema({
         required: false,
         minlength: [3, 'Must be at least 3 characters'],
         maxlength: [16, 'Must be less than 10 characters']
-    },
-    playing: {
-        listGame: {
-            type: String,
-            ref: 'ListGame'
-        },
-        startedAt: Date
     }
 }, {
     timestamps: true
