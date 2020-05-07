@@ -36,7 +36,7 @@ router.get('/', auth.checkJwt, async (req, res) => {
     .populate('game');
 
   // TODO: Once all games are up to date we can remove this
-  listGames.forEach(listGame => {
+  listGames.forEach(async listGame => {
     if (!listGame.hasOwnProperty('secondsPlayed')) {
       const secondsPlayed = (await listGame.updateSecondsPlayed()).secondsPlayed;
       listGame.secondsPlayed = secondsPlayed;
