@@ -74,11 +74,9 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
         { $project: { _id: 0, total: true } }
     ]);
 
-    this._secondsPlayed = aggregate.total;
+    this._secondsPlayed = aggregate[0].total;
 
-console.log('aggregate', aggregate);
-
-    return aggregate.total;
+    return aggregate[0].total;
 });
 
 const ListGame = mongoose.model('ListGame', ListGameSchema);
