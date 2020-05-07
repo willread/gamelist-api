@@ -47,6 +47,8 @@ const ListGameSchema = mongoose.Schema({
 ListGameSchema.virtual('secondsPlayed').get(async function() {
     // if (this._secondsPlayed) { return this._secondsPlayed; }
 
+console.log('list', this.list);
+
     const list = this.list;
     const game = this.game
 
