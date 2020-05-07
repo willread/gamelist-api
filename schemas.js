@@ -55,6 +55,7 @@ ListGameSchema.method('updateSecondsPlayed', async function() {
         {
             $match: {
                 action: 'log-time',
+                game: game._id,
                 user: listGame.list.user
             },
         },
