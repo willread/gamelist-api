@@ -47,7 +47,7 @@ const ListGameSchema = mongoose.Schema({
     }
 });
 
-ListGameSchema.virtual('secondsPlayed').get(async function() {
+ListGameSchema.virtual('secondsPlayed').get(async function(cb) {
 
     // TODO: Cache this value
 
@@ -72,7 +72,7 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
 
     console.log('seconds played', aggregate[0].total);
 
-    return aggregate[0].total;
+    cb(aggregate[0].total);
 });
 
 const ListGame = mongoose.model('ListGame', ListGameSchema);
