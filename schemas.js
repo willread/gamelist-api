@@ -47,7 +47,7 @@ const ListGameSchema = mongoose.Schema({
     }
 });
 
-ListGameSchema.virtual('secondsPlayed').get(async () => {
+ListGameSchema.virtual('secondsPlayed').get(async function() {
 
     // TODO: Cache this value
 
