@@ -52,7 +52,7 @@ console.log('list', this.list);
     const list = await List.find({ _id: this.list });
     const game = this.game
 
-    console.log('list', this.list);
+    console.log('list', list);
 
     const aggregate = Activity.aggregate([
         {
