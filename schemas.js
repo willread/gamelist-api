@@ -53,7 +53,8 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
     const aggregate = await Activity.aggregate([
         {
             $match: {
-                action: 'log-time'
+                action: 'log-time',
+                user: list.user
             },
         },
         {
