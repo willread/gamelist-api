@@ -154,50 +154,36 @@ router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
 });
 
 // Start playing a game
-// PUT /profile/playing { game }
+// PUT /list/games/:id/playing
 
 async function logTime(listGameId, seconds, user) {
   const listGame = await ListGame.findOneAndUpdate(
-      { _id: listGameId },
-      {
-          $inc: {
-              secondsPlayed: seconds
-          }
-      },
-      { returnOriginal: false }
+    { _id: listGameId },
+    {
+        $inc: {
+            secondsPlayed: seconds
+        }
+    },
+    { returnOriginal: false }
   );
 
   await listGame.populate('game');
 
-  logActivity(user,  'log-time', { seconds }, { game: listGame.game });
-
-  return listGame.secondsPlayed;
+  await logActivity(user,  'log-time', { seconds }, { game: listGame.game });
+  await listGame.updateSecondsPlayed()
 }
 
-
-
-router.put('/playing', auth.checkJwt, async (req, res) => {
+router.put('/games/:id/playing', auth.checkJwt, async (req, res) => {
   try {
-      const profile = await Profile.findOne(
-          { user: req.user.sub }
-      );
+    const list = await getUserList(req);
+    const listGame = await ListGame.findOneAndUpdate({
+      list: new mongoose.Types.ObjectId(list._id),
+      _id: new mongoose.Types.ObjectId(req.params.id)
+    }, {
+      startedPlayingAt: new Date()
+    });
 
-      // We never stopped playing the last game, log the time for that one before we update
-
-      if (profile.playing && profile.playing.listGame) {
-          const seconds = Math.floor(((new Date()).getTime() - profile.playing.startedAt.getTime()) / 1000);
-
-          await logTime(profile.playing.listGame, seconds, req.user.sub);
-      }
-
-      profile.playing = {
-          listGame: req.body.listGame,
-          startedAt: new Date()
-      };
-
-      await profile.save();
-
-      res.status(200).json(profile);
+    res.status(200).json({});
   } catch(e) {
       res.status(400).json({
           message: 'An unexpected error occured'
@@ -207,33 +193,31 @@ router.put('/playing', auth.checkJwt, async (req, res) => {
 
 // Stop playing a game and log the time
 // If the cancel flag is set, no time will be logged
-// DELETE /playin?[cancel=true]
+// DELETE /list/games/:id/playing?[cancel=true]
 
-router.delete('/playing', auth.checkJwt, async (req, res) => {
+router.delete('/games/:id/playing', auth.checkJwt, async (req, res) => {
   try {
-      const profile = await Profile.findOne(
-          { user: req.user.sub }
-      );
-      let secondsPlayed;
+    const list = await getUserList(req);
+    const listGame = await ListGame.findOne({
+      list: new mongoose.Types.ObjectId(list._id),
+      _id: new mongoose.Types.ObjectId(req.params.id)
+    });
+    let secondsPlayed;
 
-      if (!req.query.cancel) {
-          if (profile.playing && profile.playing.listGame) {
-              const seconds = Math.floor(((new Date()).getTime() - profile.playing.startedAt.getTime()) / 1000);
+    if (!req.query.cancel) {
+      if (listGame.startedPlayingAt) {
+        const seconds = Math.floor(((new Date()).getTime() - listGame.startedPlayingAt.getTime()) / 1000);
 
-              secondsPlayed = await logTime(profile.playing.listGame, seconds, req.user.sub);
-          }
+        secondsPlayed = await logTime(profile.playing.listGame, seconds, req.user.sub);
       }
+    }
 
-      profile.playing = {
-          listGame: null,
-          startedAt: null
-      };
+    listGame.startedPlayingAt = null;
+    await listGame.save();
 
-      await profile.save();
-
-      res.status(200).json({
-          secondsPlayed
-      });
+    res.status(200).json({
+        secondsPlayed
+    });
   } catch(e) {
       res.status(400).json({
           message: 'An unexpected error occured'

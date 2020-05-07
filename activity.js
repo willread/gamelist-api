@@ -8,7 +8,7 @@ const { Activity, Profile } = require('./schemas');
 
 var router = express.Router();
 
-const logActivity = (user, action, meta, models) => {
+const logActivity = async (user, action, meta, models) => {
     const params = {
         user, action, meta
     };
@@ -21,7 +21,7 @@ const logActivity = (user, action, meta, models) => {
 
     const activity = new Activity(params);
 
-    activity.save();
+    await activity.save();
 };
 
 // Get latest activities

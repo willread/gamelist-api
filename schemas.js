@@ -35,6 +35,7 @@ const ListGameSchema = mongoose.Schema({
     },
     physicalCopy: Boolean,
     digitalCopy: Boolean,
+    secondsPlayed: Number,
     status: {
       type: String,
       enum: ['playing', 'finished', 'stopped', 'unplayed']
@@ -48,9 +49,6 @@ const ListGameSchema = mongoose.Schema({
 });
 
 ListGameSchema.method('updateSecondsPlayed', (function(cb) {
-
-    // TODO: Cache this value
-
     const listGame = this;
     const game = this.game
 
@@ -71,9 +69,10 @@ ListGameSchema.method('updateSecondsPlayed', (function(cb) {
         },
         { $project: { _id: 0, total: true } }
     ], function(err, aggregate) {
-        console.log('seconds played', aggregate[0].total);
+        listGame.secondsPlayed = aggregate[0].total;
+        listGame.save();
 
-        cb(aggregate[0].total);
+        cb();
     });
 }));
 
