@@ -52,7 +52,7 @@ ListGameSchema.method('updateSecondsPlayed', (function(cb) {
     const listGame = this;
     const game = this.game
 
-    listGame.populate('list').exec((err, listGame) => {
+    listGame.find({}).populate('list').exec((err, listGame) => {
         Activity.aggregate([
             {
                 $match: {
