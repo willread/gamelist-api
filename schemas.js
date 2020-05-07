@@ -49,10 +49,8 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
 
 console.log('list', this.list);
 
-    const list = await List.find({ _id: this.list });
+    const list = await List.findOne({ _id: this.list });
     const game = this.game
-
-    console.log('list', list);
 
     const aggregate = Activity.aggregate([
         {
