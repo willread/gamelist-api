@@ -47,11 +47,9 @@ const ListGameSchema = mongoose.Schema({
     }
 });
 
-ListGameSchema.virtual('secondsPlayed').get(async function() {
-    if (this._secondsPlayed) {
-        console.log('serviing from cache');
-        return this._secondsPlayed;
-    }
+ListGameSchema.virtual('secondsPlayed').get(async () => {
+
+    // TODO: Cache this value
 
     const list = await List.findOne({ _id: this.list });
     const game = this.game
@@ -72,9 +70,7 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
         { $project: { _id: 0, total: true } }
     ]);
 
-    this._secondsPlayed = aggregate[0].total;
-
-    console.log('seconds played', this._secondsPlayed);
+    console.log('seconds played', aggregate[0].total);
 
     return aggregate[0].total;
 });
