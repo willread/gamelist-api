@@ -44,16 +44,17 @@ const ListGameSchema = mongoose.Schema({
     timestamps: true
 });
 
-ListGameSchema.virtual('secondsPlayed').get(async () => {
+ListGameSchema.virtual('secondsPlayed').get(async function() {
     // if (this._secondsPlayed) { return this._secondsPlayed; }
 
     const list = await List.find({ _id: this.list });
+    const game = this.game
 
     const aggregate = Activity.aggregate([
         {
             $match: {
                 action: 'log-time',
-                game: this.game,
+                game,
                 user: list.user
             },
         },
