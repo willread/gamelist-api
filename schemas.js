@@ -54,7 +54,7 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
         {
             $match: {
                 action: 'log-time',
-                'game._id': mongoose.Types.ObjectId(this.game._id),
+                'game._id': mongoose.Types.ObjectId(game._id),
                 user: list.user
             },
         },
