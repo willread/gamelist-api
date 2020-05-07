@@ -54,7 +54,7 @@ ListGameSchema.virtual('secondsPlayed').get(function(cb) {
     const listGame = this;
     const game = this.game
 
-    List.findOne({ _id: this.list }, function(list) {
+    List.findOne({ _id: this.list }, function(err, list) {
         Activity.aggregate([
             {
                 $match: {
@@ -69,7 +69,7 @@ ListGameSchema.virtual('secondsPlayed').get(function(cb) {
                 }
             },
             { $project: { _id: 0, total: true } }
-        ], function(aggregate) {
+        ], function(err, aggregate) {
             console.log('seconds played', aggregate[0].total);
 
             cb(aggregate[0].total);
