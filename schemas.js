@@ -53,8 +53,6 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
         return this._secondsPlayed;
     }
 
-    console.log('serving fresh');
-
     const list = await List.findOne({ _id: this.list });
     const game = this.game
 
@@ -75,6 +73,8 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
     ]);
 
     this._secondsPlayed = aggregate[0].total;
+
+    console.log('seconds played', this._secondsPlayed);
 
     return aggregate[0].total;
 });
