@@ -157,18 +157,9 @@ router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
 // PUT /list/games/:id/playing
 
 async function logTime(listGameId, seconds, user) {
-  const listGame = await ListGame.findOneAndUpdate(
-    { _id: listGameId },
-    {
-        $inc: {
-            secondsPlayed: seconds
-        }
-    },
-    { returnOriginal: false }
-  );
+  const listGame = await ListGame.findOne({ _id: listGameId });
 
   await listGame.populate('game');
-
   await logActivity(user,  'log-time', { seconds }, { game: listGame.game });
   await listGame.updateSecondsPlayed()
 }
