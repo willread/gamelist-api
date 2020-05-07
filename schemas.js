@@ -53,9 +53,7 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
     const aggregate = await Activity.aggregate([
         {
             $match: {
-                action: 'log-time',
-                game: mongoose.ObjectId(game._id),
-                user: list.user
+                action: 'log-time'
             },
         },
         {
