@@ -47,35 +47,35 @@ const ListGameSchema = mongoose.Schema({
     }
 });
 
-ListGameSchema.virtual('secondsPlayed').get(function(cb) {
+ListGameSchema.method('updateSecondsPlayed', (function(cb) {
 
     // TODO: Cache this value
 
     const listGame = this;
     const game = this.game
 
-    List.findOne({ _id: this.list }, function(err, list) {
-        Activity.aggregate([
-            {
-                $match: {
-                    action: 'log-time',
-                    user: list.user
-                },
-            },
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: '$meta.seconds'}
-                }
-            },
-            { $project: { _id: 0, total: true } }
-        ], function(err, aggregate) {
-            console.log('seconds played', aggregate[0].total);
+    listGame.populate('list')
 
-            cb(aggregate[0].total);
-        });
+    Activity.aggregate([
+        {
+            $match: {
+                action: 'log-time',
+                user: listGame.list.user
+            },
+        },
+        {
+            $group: {
+                _id: null,
+                total: { $sum: '$meta.seconds'}
+            }
+        },
+        { $project: { _id: 0, total: true } }
+    ], function(err, aggregate) {
+        console.log('seconds played', aggregate[0].total);
+
+        cb(aggregate[0].total);
     });
-});
+}));
 
 const ListGame = mongoose.model('ListGame', ListGameSchema);
 
