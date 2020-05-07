@@ -56,6 +56,8 @@ ListGameSchema.virtual('secondsPlayed').get(async () => {
                 game: this.game,
                 user: list.user
             },
+        },
+        {
             $group: {
                 _id: null,
                 total: { $sum: '$meta.seconds'}
