@@ -52,28 +52,28 @@ ListGameSchema.method('updateSecondsPlayed', (function(cb) {
     const listGame = this;
     const game = this.game
 
-    listGame.populate('list')
-
-    Activity.aggregate([
-        {
-            $match: {
-                action: 'log-time',
-                user: listGame.list.user
+    listGame.populate('list').exec((err, listGame) => {
+        Activity.aggregate([
+            {
+                $match: {
+                    action: 'log-time',
+                    user: listGame.list.user
+                },
             },
-        },
-        {
-            $group: {
-                _id: null,
-                total: { $sum: '$meta.seconds'}
-            }
-        },
-        { $project: { _id: 0, total: true } }
-    ], function(err, aggregate) {
-        console.log('result', err, aggregate, listGame.list);
-        listGame.secondsPlayed = aggregate[0].total;
-        listGame.save();
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: '$meta.seconds'}
+                }
+            },
+            { $project: { _id: 0, total: true } }
+        ], function(err, aggregate) {
+            console.log('result', err, aggregate, listGame.list);
+            listGame.secondsPlayed = aggregate[0].total;
+            listGame.save();
 
-        cb();
+            cb();
+        });
     });
 }));
 
