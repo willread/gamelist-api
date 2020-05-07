@@ -215,8 +215,29 @@ router.delete('/games/:id/playing', auth.checkJwt, async (req, res) => {
   } catch(e) {
       res.status(400).json({
           message: 'An unexpected error occured',
-          error: e.message
       });
+  }
+});
+
+// Manually log time
+// PATCH /list/games/:id/playing
+
+router.patch('/games/:id/playing', auth.checkJwt, async (req, res) => {
+  try {
+    const list = await getUserList(req);
+    const listGame = await ListGame.findOne({
+      list: new mongoose.Types.ObjectId(list._id),
+      _id: new mongoose.Types.ObjectId(req.params.id)
+    });
+    const secondsPlayed = await logTime(listGame, seconds, new Date(), req.user.sub);
+
+    res.status(200).json({
+      secondsPlayed
+    });
+  } catch(e) {
+    res.status(400).json({
+      message: 'An unexpected error occured',
+  });
   }
 });
 
