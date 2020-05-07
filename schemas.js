@@ -50,7 +50,7 @@ ListGameSchema.virtual('secondsPlayed').get(async function() {
     const list = await List.findOne({ _id: this.list });
     const game = this.game
 
-    const aggregate = Activity.aggregate([
+    const aggregate = await Activity.aggregate([
         {
             $match: {
                 action: 'log-time',
