@@ -245,6 +245,7 @@ router.patch('/games/:id/playing', auth.checkJwt, async (req, res) => {
   } catch(e) {
     res.status(400).json({
       message: 'An unexpected error occured',
+      error: e.message
   });
   }
 });
