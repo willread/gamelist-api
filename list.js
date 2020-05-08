@@ -147,6 +147,8 @@ router.delete('/games/:id', auth.checkJwt, async (req, res) => {
 // PATCH /list/games/:id
 
 router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
+  // TODO: Sanitize body, remove unneeded fields
+
   const list = await getUserList(req);
   const listGame = await ListGame.findOneAndUpdate({
     list: new mongoose.Types.ObjectId(list._id),
@@ -231,21 +233,22 @@ router.delete('/games/:id/playing', auth.checkJwt, async (req, res) => {
 // PATCH /list/games/:id/playing
 
 router.patch('/games/:id/playing', auth.checkJwt, async (req, res) => {
+  const secondsPlayed = parseInt(req.body.secondsPlayed);
+
   try {
     const list = await getUserList(req);
     const listGame = await ListGame.findOne({
       list: new mongoose.Types.ObjectId(list._id),
       _id: new mongoose.Types.ObjectId(req.params.id)
     });
-    const secondsPlayed = await logTime(listGame, seconds, new Date(), req.user.sub);
+    const totalSecondsPlayed = await logTime(listGame, secondsPlayed, new Date(), req.user.sub);
 
     res.status(200).json({
-      secondsPlayed
+      totalSecondsPlayed
     });
   } catch(e) {
     res.status(400).json({
-      message: 'An unexpected error occured',
-      error: e.message
+      message: 'An unexpected error occured'
   });
   }
 });
