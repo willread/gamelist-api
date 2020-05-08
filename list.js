@@ -69,7 +69,10 @@ router.get('/:id', async (req, res) => {
 
       res.status(200).json({ games });
     } catch(e) {
-      res.status(500).json({  message: 'An unexpected error occured' });
+      res.status(400).json({
+        message: 'An unexpected error occured',
+        error: e.message
+      });
     }
   } else {
     res.status(404).json({ message: 'No such list found' });
@@ -190,7 +193,8 @@ router.put('/games/:id/playing', auth.checkJwt, async (req, res) => {
     res.status(200).json({});
   } catch(e) {
       res.status(400).json({
-          message: 'An unexpected error occured'
+          message: 'An unexpected error occured',
+          error: e.message
       });
   }
 });
@@ -225,6 +229,7 @@ router.delete('/games/:id/playing', auth.checkJwt, async (req, res) => {
   } catch(e) {
       res.status(400).json({
           message: 'An unexpected error occured',
+          error: e.message
       });
   }
 });
@@ -248,7 +253,8 @@ router.patch('/games/:id/playing', auth.checkJwt, async (req, res) => {
     });
   } catch(e) {
     res.status(400).json({
-      message: 'An unexpected error occured'
+      message: 'An unexpected error occured',
+      error: e.message
   });
   }
 });
