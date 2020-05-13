@@ -5,6 +5,7 @@ const giantbomb = require('./giantbomb');
 const auth = require('./auth');
 const { ListGame, Game, List, Profile } = require('./schemas');
 const { logActivity } = require('./activity');
+const { cdnImage } = require('./games');
 
 // Configure router
 
@@ -97,9 +98,9 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
         name: giantbombGame.name,
         platform: req.body.platform,
         images: {
-          icon: giantbombGame.image.icon_url,
-          original: giantbombGame.image.original_url,
-          thumbnail: giantbombGame.image.thumb_url
+          icon: cdnImage(giantbombGame.image.icon_url),
+          original: cdnImage(giantbombGame.image.original_url),
+          thumbnail: cdnImage(giantbombGame.image.thumb_url)
         },
         genres: giantbombGame.genres.map(genre => genre.name),
       });
