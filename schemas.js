@@ -40,7 +40,8 @@ const ListGameSchema = mongoose.Schema({
       type: String,
       enum: ['playing', 'finished', 'stopped', 'unplayed']
     },
-    startedPlayingAt: Date
+    startedPlayingAt: Date,
+    lastPlayedAt: Date
 }, {
     timestamps: true,
     toJSON: {

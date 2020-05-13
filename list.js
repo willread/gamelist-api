@@ -166,8 +166,8 @@ router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
   res.status(200).json({});
 });
 
-// Start playing a game
-// PUT /list/games/:id/playing
+
+// Utility function to log time for a list game
 
 async function logTime(listGameId, seconds, startedPlayingAt, user) {
   const listGame = await ListGame.findOne({ _id: listGameId });
@@ -178,6 +178,9 @@ async function logTime(listGameId, seconds, startedPlayingAt, user) {
   return (await listGame.updateSecondsPlayed()).secondsPlayed;
 }
 
+// Start playing a game
+// PUT /list/games/:id/playing
+
 router.put('/games/:id/playing', auth.checkJwt, async (req, res) => {
   try {
     const list = await getUserList(req);
@@ -186,7 +189,8 @@ router.put('/games/:id/playing', auth.checkJwt, async (req, res) => {
       list: new mongoose.Types.ObjectId(list._id),
       _id: new mongoose.Types.ObjectId(req.params.id)
     }, {
-      startedPlayingAt: new Date()
+      startedPlayingAt: new Date(),
+      lastPlayedAt: new Date()
     });
 
     res.status(200).json({});
@@ -220,6 +224,7 @@ router.delete('/games/:id/playing', auth.checkJwt, async (req, res) => {
     }
 
     listGame.startedPlayingAt = null;
+    listGame.lastPlayedAt = new Date();
     await listGame.save();
 
     res.status(200).json({
