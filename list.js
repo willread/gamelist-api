@@ -171,7 +171,7 @@ router.patch('/games/:id/', auth.checkJwt, async (req, res) => {
 // Utility function to log time for a list game
 
 async function logTime(listGameId, seconds, startedPlayingAt, user) {
-  const listGame = await ListGame.findOne({ _id: listGameId });
+  const listGame = await ListGame.findOneAndUpdate({ _id: listGameId }, { lastPlayedAt: new Date()});
 
   await listGame.populate('game');
   await logActivity(user,  'log-time', { seconds, startedPlayingAt }, {game: listGame.game });
@@ -225,7 +225,6 @@ router.delete('/games/:id/playing', auth.checkJwt, async (req, res) => {
     }
 
     listGame.startedPlayingAt = null;
-    listGame.lastPlayedAt = new Date();
     await listGame.save();
 
     res.status(200).json({
