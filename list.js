@@ -102,7 +102,7 @@ router.post('/games/:id', auth.checkJwt, async (req, res) => {
           original: cdnImage(giantbombGame.image.original_url),
           thumbnail: cdnImage(giantbombGame.image.thumb_url)
         },
-        genres: giantbombGame.genres.map(genre => genre.name),
+        genres: (giantbombGame.genres || []).map(genre => genre.name),
       });
 
       await game.save();
