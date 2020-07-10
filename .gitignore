@@ -106,3 +106,8 @@ dist
 # PM2
 
 env.json
+
+# Mongo
+
+dump
+data
