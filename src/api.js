@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoSanitize = require('mongo-sanitize');
 const mongoose = require('mongoose');
+
+console.log('Connecting to database');
+
 mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -35,11 +38,12 @@ app.use((req, res, next) => {
 
 const db = mongoose.connection;
 db.on('error', () => {
+  console.error('Error connecting to database');
   process.exit(1);
 });
 
 db.once('open', () => {
-  const server = app.listen(process.env.PORT || 8080, function () {
+  const server = app.listen(process.env.PORT || 3000, function () {
     const port = server.address().port;
     console.log('App now running on port', port);
   });
@@ -59,6 +63,9 @@ app.use('/activity', require('./activity').router);
 // Handle authentication errors
 
 app.use((err, req, res, next) => {
+  if (err) {
+    console.error('API Error:', err);
+  }
 	if (err.name === 'UnauthorizedError') {
 		res.status(401).json({ message: 'Unauthorized. Invalid token!' });
 	} else {

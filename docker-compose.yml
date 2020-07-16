@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  gamera-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3004
+      - AUTH0_API_IDENTIFIER=https://api.gamera.org
+      - AUTH0_DOMAIN=gamera.us.auth0.com
+    env_file:
+      - ./env/gamera-api.env
+    restart: always
+    expose:
+      - "3004"
+    links:
+      - gamera-mongo
+    networks:
+      - default
+      - gamera
+  gamera-mongo:
+    image: mongo
+    env_file:
+      - ./env/gamera-mongo.env
+    # volumes:
+    #   - ./data/gamera-mongo:/data/db
+    restart: always
+    expose:
+      - "27017"
+    networks:
+      - gamera
+networks:
+  gamera:
+    driver: bridge
+    internal: true

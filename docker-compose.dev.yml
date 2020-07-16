@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  gamera-api:
+    build:
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/usr/src/gamera-api
+    ports:
+      - "3004:3004"

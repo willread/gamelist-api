@@ -2,9 +2,11 @@
   "name": "gamera-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/api",
+    "start:dev": "nodemon",
+    "dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build "
   },
   "repository": {
     "type": "git",
@@ -29,5 +31,8 @@
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.7",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
