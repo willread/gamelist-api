@@ -50,7 +50,7 @@ db.once('open', () => {
 });
 
 app.get('/', (req, res) => {
-  res.end('');
+  res.end(':)');
 });
 
 // Import modules
