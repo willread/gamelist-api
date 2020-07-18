@@ -21,7 +21,8 @@ const getUserList = async req => {
     },
     {
       new: true,
-      upsert: true
+      upsert: true,
+      timestamps: false
     }
   );
 };
