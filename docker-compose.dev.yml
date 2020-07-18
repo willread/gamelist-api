@@ -7,3 +7,7 @@ services:
       - ./:/usr/src/gamera-api
     ports:
       - "3004:3004"
+  gamera-mongo:
+    networks:
+      - gamera
+      - default
