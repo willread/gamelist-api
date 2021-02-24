@@ -11,3 +11,12 @@ services:
     networks:
       - gamera
       - default
+  gamera-parse-dashboard:
+    image: parseplatform/parse-dashboard
+    ports:
+      - "4044:4044"
+    environment:
+      - PORT=4044
+    env_file:
+      - ./env/gamera-parse-dashboard.env
+    command: parse-dashboard
