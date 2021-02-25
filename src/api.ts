@@ -1,6 +1,6 @@
 import express from 'express';
 
-const ParseServer = require('parse-server').ParseServer
+const { default: ParseServer, ParseGraphQLServer } = require('parse-server');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -10,16 +10,24 @@ const config: any = {
   appId: process.env.PARSE_APP_ID,
   masterKey: process.env.PARSE_MASTER_KEY,
   serverURL: process.env.PARSE_SERVER_URL,
+  publicServerURL: process.env.PARSE_SERVER_URL,
+  graphQLServerURL: 'http://localhost:3004/graphql',
 };
 
 const mountPath = process.env.PARSE_MOUNT || '/parse';
-const api = new ParseServer(config);
+const parseServer = new ParseServer(config);
 
-app.use(mountPath, api);
+const parseGraphQLServer = new ParseGraphQLServer(
+  parseServer,
+  {
+    graphQLPath: '/graphql',
+    playgroundPath: '/playground',
+  }
+);
 
-app.get('/', (req, res) => {
-  res.send('The sedulous hyena ate the antelope!');
-});
+app.use(mountPath, parseServer.app);
+parseGraphQLServer.applyGraphQL(app);
+parseGraphQLServer.applyPlayground(app);
 
 app.listen(port, () => {
   return console.log(`Server is listening on ${port}`);
