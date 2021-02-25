@@ -2,7 +2,7 @@ FROM node:14-alpine
 WORKDIR /usr/src/gamera-api
 COPY package*.json ./
 RUN apk add git
-run apk add bash
+RUN apk add bash
 RUN npm install && mv /usr/src/gamera-api/node_modules /node_modules
 COPY . .
 CMD [ "npm", "run", "start:dev" ]
